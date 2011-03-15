@@ -1,0 +1,41 @@
+David's Docbook Publishing System
+=================================
+
+PRE-REQUISITE:
+
+  Windows users must install XMLShell
+    http://sourceforge.net/projects/xmlsh/
+    Download the package appropriate for your OS.
+    Expand the package into .\opt\xmlsh_1_1_4
+
+  OS X users will have the XMLShell package installed automatically.
+  
+  Posix (Linux) users should have the XMLShell installed automatically. If it fails, follow the
+  Windows instructions, above.
+
+Windows:
+  At a command prompt in this directory, type '.\boot' and press 'enter'.
+  
+  At the 'dds$' prompt, type 'dhelp' for help.
+
+
+Posix (OS X, Linux):
+  At a Bash command prompt in this directory, type '. setenv' and then type 'boot.'
+  
+  At the 'dds$' prompt, type 'dhelp' for help.
+  
+  
+On its first or second run, 'setenv' will attempt to install the following software packages. 
+If it is unable to do so, please download and install them manually as instructed below:
+
+Docbook XSL
+  http://sourceforge.net/projects/docbook/
+  Download the package appropriate for your OS.
+  Expand the package into .\opt\docbook-xsl-ns-1.76.1
+  
+Docbook 5.0
+  http://www.docbook.org/xml/5.0/
+  Download the docbook-5.0.zip package.
+  Expand the package into .\opt\docbook-5.0
+
+Licensing information for each package is included in the package.

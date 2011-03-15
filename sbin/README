@@ -1,0 +1,69 @@
+=========================================
+davidpriest.ca Documentation System (DDS)
+=========================================
+
+setenv      unixy environment. Use ". setenv" at command line prompt.
+boot.bat    windows environment. Use "boot.bat" at command line prompt.
+
+/       David's Documentation System
+        a bash-like environment for publication production and management.
+        "backed up monthly"
+
+/bin    DDS commands and pipelines (used by DDS XMLSH workflows)
+        contains commands used by sysadmin and users. May also contain commands which are used
+        indirectly by scripts.
+
+/etc    DDS configuration files (used by DDS XMLSH workflows)
+        contains configuration files: local file used to control the operation of programs; static,
+        non-executable. 
+            catalog.xml
+            
+/home   Publications Library
+        contains user docbook source "backed up daily"
+
+/lib    DDS libraries (used by DDS XMLSH workflows)
+        contains those shared library images needed to boot the system and run the
+        commands in the root filesystem (/bin, /sbin) "backed up weekly"
+            /xslt
+            /xproc
+            /xquery
+            /xmlsh?
+
+/opt    XMLSH, Java libraries, xsltproc, other essential third-party utilities
+        add-on application software packages. (not backed up; install from web)
+
+/sbin   Sys Admin Utilities
+        Root-only commands are stored in /sbin, /usr/sbin, and /usr/local/sbin. 
+        /sbin contains binaries essential for booting, restoring, recovering, and/or repairing the
+        system in addition to the binaries in /bin.
+        (tangle should be in here)
+        Programs executed after /usr is known to be mounted (when there are no problems) are
+        generally placed into /usr/sbin.
+        Locally-installed system administration programs should be placed into /usr/local/sbin.
+
+/tmp    temporary files
+        Programs must not assume that any files or directories in /tmp are preserved between
+        invocations of the program. "deleted each session"
+        
+/usr    End-user files that are not doc-source and final doc-output
+        mount /usr read-only shareable, read-only data. must not be written to. Any information that
+        is host-specific or varies with time is stored elsewhere. software maintenance files can go
+        here.  "backed up weekly"
+        
+            /bin    custom XMLSH workflows for separate clients
+            /etc    configuration for separate clients
+                        catalog.xml   generated
+            /lib    custom xslt, xproc, etc for separate clients
+            /sbin   extra Java libraries, etc, ie. XEP for separate clients
+            /src    Literate documentation of client's code
+
+/var    persistent DDS logs and caches
+        contains variable data files. This includes spool directories and files, administrative and
+        logging data, and transient and temporary files. Everything that once went into /usr that is
+        written to during system operation (as opposed to installation and software maintenance) must
+        be in /var. "backed up daily"
+            /log    DDS log output
+      
+      
+Filesystem Hierarchy Standard
+per http://www.pathname.com/fhs/pub/fhs-2.3.html

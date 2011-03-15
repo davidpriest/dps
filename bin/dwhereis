@@ -1,0 +1,48 @@
+# returns the path to a file
+function usage {
+  echo "Return full path to matching @xml:id"
+  echo "dwhereis pubid"
+#  echo "dwhereis [-l|--library libdir] pubid"
+#  echo "  -l        : look in this library directory"
+#  echo "  libdir    : '$UPUB'"
+  echo "  pubid     : the unique xml:id of a publication"
+  echo "Lists path and profile information for books."
+} ;
+
+unset P
+unset PID
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -l)               
+      shift; [ -n "$1" ] && UPUB=$1
+      ;;
+    -?|-h|--help)
+      usage; exit
+      ;;
+    *)
+      [ -n "$1" ] && PID=$1 # last pub wins  #TODO: allow sequence, return sequence
+      ;;
+  esac
+  shift
+done
+
+try {
+  if [ $PID ] ; then
+    FL=$(xls -R | xpath "//file[matches(@path,\"$UPUB\")]//file[matches(@name,\".*\.xml\")]/@path/string()")
+    [ $? ] && throw "dwhereis: FL error."
+    BOOK=$<(xgrep "/*[@xml:id=\"$PID\"]" $FL)
+    [ $? ] && throw "dwhereis: BOOK error."
+    PATH=$(xpath -i $BOOK "//file/@path/string()")
+    [ $? ] && throw "dwhereis: PATH error."
+    [ ! -e $PATH ] && throw "dwhereis: Book '$PID' not found in Library '$UPUB'."
+  else
+    throw "dwhereis: Book ID is required."
+  fi
+}
+catch X {
+  echo $X
+  exit 1
+} finally {
+  echo $PATH
+  return 0
+}

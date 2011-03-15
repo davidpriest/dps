@@ -1,0 +1,29 @@
+function du_setrally {
+  try {
+    [ -e $USRDIR/etc/config.properties ] && {
+      RURI=$(xproperties -in $USRDIR/etc/config.properties -v rally.uri)
+      RUSER=$(xproperties -in $USRDIR/etc/config.properties -v rally.username)
+      RPASS=$(xproperties -in $USRDIR/etc/config.properties -v rally.password)
+      RPROD=$(xproperties -in $USRDIR/etc/config.properties -v rally.product)
+      #TODO: release tag via cmd line
+      RELTAG="MIR-1.4.6"
+    } || {
+      throw "du_setrally: $USRDIR/etc/config.properties not found; rally settings unavailable."
+    }
+
+    Q="project?query=(Name%20=%20\"$RPROD\")"
+    PRJID=$(xpath -i $<(http -user $RUSER -password $RPASS -get {$RURI/$Q\&fetch=ObjectID}) "//ObjectID/string()")
+    [ $? ] && throw "du_setrally: Unable to get Project ID from Rally query."
+    RTAIL="&project=project/$PRJID&pagesize=100&fetch=true&start="
+    [ -n "$ERR" ] && throw $ERR
+  } catch X {
+    echo ""
+    echo "##DDS>>"
+    echo $X
+    echo "<<DDS##"
+    echo ""
+    return 1
+  } finally {
+    return 0
+  }
+}

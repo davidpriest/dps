@@ -1,0 +1,32 @@
+# DDS Help
+function usage {
+  echo "davidpriest.ca Docbook Documentation System"
+  echo ""
+  echo "clean       : clean the tmp directory $TEMPDIR"
+  echo "dcx         : count xpath matches"
+  echo "ded         : open in XMLMind XMLEditor "
+  echo "dlint       : run stats on a publication"
+  echo "dls         : list docbook publications"
+  echo "dmktargets  : build new cross-reference targets"
+  echo "dp-db5      : compile a Docbook5 XML document"
+  echo "dp-fo       : compile an XML:FO document"
+  echo "dp-pdf      : compile a PDF document"
+  echo "dp-wh       : compile a WebHelp HTML document"
+  echo "dpf         : show publication profiles"
+  echo "dwhereis    : given root id, show path"
+  echo "dwhichis    : given path, show root id"
+  echo "dxpath      : publish results of an xpath match"
+  echo "help        : show XMLSH help"
+  echo "use -?, -h, or --help option to show help for most commands"
+  echo ""
+} ;
+
+try {
+  usage
+}
+catch X {
+  echo $X
+  return 1
+} finally {
+  return 0
+}

@@ -1,0 +1,93 @@
+# Displays a DDS ls directory listing
+function usage {
+  echo "Publication Library listings"
+  echo "dls [-d|h] [-i|--idwarn]"
+  echo "  -dhx    : output detailed, human*, XMLSH xls"
+  echo "  -i      : list only docs with missing root xml:ids (invokes a warning)"
+  echo " Lists all root documents in directory. Returns 0 on success."
+} ;
+
+unset OPT
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -d|-h|-x)   
+      OPT=$1
+      ;;
+    -i|--idwarn)               
+      NULLIDS=1
+      ;;
+    -?|--help)
+      usage; exit
+      ;;
+  esac
+  shift
+done
+
+# defaults
+[ ! -n "$OPT" ] && OPT="-h"
+
+try {
+  # find root documents
+  #TODO: use xls -R -l -a ; "contains[@type="file" @readable="true" @path endswith .xml]"
+  #TODO: handle multiple filename output
+  FL=$(xls -R | xpath "//file[matches(@path,\"$UPUB\")]//file[matches(@name,\".*\.xml\")]/@path/string()")
+  BOOKS=$<(xgrep "/*[contains('{$ROOTS}',local-name()) and @xml:id]" $FL)
+  XL=<[ <library type="publications" roots="{$ROOTS}" id="{$GRP}" path="{$UPUB}"/> ]>
+  for P in $<(xpath -i $BOOKS "//*:file[not(@path=preceding::*:file/@path)]/@path/string()") ; do
+    ID=$(xpath -cf "$P" "/*/@xml:id/string()")
+    FOUT=$(xpath -cf "$P" "/*/*:info//*:filename[@role='filename']")
+    if [ "$ID" ] && [ "$FOUT" ] && [ ! -n "$NULLIDS" ] ; then
+      XB=$<(xslt -cf "$P" -f "$SYSXSL/dds/pub_to_dcatalog.xsl")
+      XL=$<(xed -i $XL -a $XB -m "/*")
+    elif [ -n "$NULLIDS" ] ; then
+      R=$(xpath -cf "$P" "/*/name()")
+      XL=$<(xed -i $XL -a <[ <pub path="{$P}" root="{$R}"/> ]> -m "/*")
+      ERR="dls: Invalid Root xml:ids"
+    fi
+  done
+  # detect duplicate IDs
+  if [ ! -n "$NULLIDS" ] ; then
+    DUP=
+    for B in $(xpath -i $XL "//pub/@id/string()") ; do
+      case $DUP in
+        */$B|$B/*|*/$B/*|$B)
+          # duplicate pub id
+          ERR="dls: '$B' Duplicated Root xml:id"
+          throw $ERR
+          ;;
+        *)
+          DUP="$DUP/$B"
+          ;;
+      esac
+    done
+  fi 
+
+  # convert to output format
+  case "$OPT" in
+  # (leaf to root tree order makes it easier; so trunk -rens don't affect leafier -rens)
+  -d) 
+    ;;
+  -h)
+    echo "Library Contents"
+    XL=$<(xslt -i $XL -f $SYSXSL/dds/dcatalog_to_human.xsl)
+    ;;
+  -x)
+    XL=$<(xed -i $XL -d -m "//pub/@root")
+    XL=$<(xed -i $XL -ren "name" -m "//pub/@id")
+    XL=$<(xed -i $XL -ren "file" -m "//pub")
+    XL=$<(xed -i $XL -d -m "/*/@*")
+    XL=$<(xed -i $XL -ren "dir" -m "/*") 
+    ;;
+  esac
+  [ -n "$ERR" ] && throw $ERR
+} 
+catch X {
+  echo $XL
+  echo $X
+  return 1
+} finally {
+#  
+#  
+  xecho $XL
+  return 0
+}

@@ -1,0 +1,125 @@
+# Publish DB5
+function usage {
+  echo "Publish Docbook5 XML File"
+  echo "dp-db5 $DUSETOPTS"
+  echo "returns list ($OUT, $OUTNAME): profiled db5 file, destination filename"
+}
+
+try {
+  du_setopt_dp $@
+  du_setpub
+
+  [ -e $BASE/pre-db5.xsh ] && xmlsh $BASE/pre-db5.xsh
+
+  # inclusions
+  OUT=$T"_11.incl.xml"
+  xinclude "$P" > "$OUT" 2>>$DERROR
+  [ $? ] && throw "dp-db5: inclusions step failed."
+  
+  # profile: DDS conventions
+  IN=$OUT
+  XSL=$SYSXSL"/db5/dds-profile.xsl"
+  SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
+  OUT=$T"_12.$SID.xml"
+  xslt -f "$XSL" -v debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
+  [ $? ] && throw "dp-db5: DDS conventions profiling step failed."
+
+  # profile: DocBook conventions
+  [ "$PF" ] && {
+    IN=$OUT
+    XSL=$XSLFO"/profiling/profile.xsl"
+    OUT=$T"_13.db5_profile.xml"
+    #TODO: better profiling: this requires all profile attributes to be unique
+    xslt -f "$XSL" -v profile.arch $PF profile.audience $PF profile.condition $PF profile.lang $PF profile.os $PF profile.revision $PF profile.security $PF profile.status $PF profile.userlevel $PF profile.vendor $PF profile.wordsize $PF debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
+    [ $? ] && throw "dp-db5: Docbook conventions profiling step failed."
+  }
+  
+  # fix IDs
+  IN=$OUT
+  XSL=$SYSXSL"/uniqid.xsl"
+  SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
+  OUT=$T"_14.$SID.xml"
+  xslt -f "$XSL" -v debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
+  [ $? ] && throw "dp-db5: DDS ID Fixing step failed."
+  
+  # tweak?
+
+  # draft: purple
+  [ -n "$PURPLE" ] && {
+    # get repo revision number
+    if [ -e $USRDIR/etc/config.properties ] ; then
+      REPO=$(xproperties -in $USRDIR/etc/config.properties -v repo.type)
+      case "$REPO" in
+        hg|mercurial)
+          REV=$(eval hg --cwd $UPUB id --id)
+          REV=" HG:"$REV
+          ;;
+        svn)
+          REV=$(eval svn info --xml $UPUB | xpath "//commit/@revision/string()")
+          REV="SVN:"$REV
+          ;;
+        git)
+          REV=$(eval git log -1 --pretty=format:%h -- $UPUB)
+          REV="GIT:$REV"
+          ;;
+        *)
+          REV=""
+          ERR="dp-db5: repotype not set in $USRDIR/etc/config.properties; "
+          ;;
+      esac
+#      l=16
+#      i=<{{$i}}>
+#      REV="string-join(for $i in 0 to (string-length(\"$REV\") idiv $l ) return substring(\"$REV\", $i*$l + 1, $l),\" \")" 
+#      REV=$(xpath -n "$REV")
+      REV=$(xpath -n "substring(\"$REV\",1,16)") #12digit rev, + HG/SVN/GIT indicator
+    else
+      ERR="dp-db5: missing $USRDIR/etc/config.properties"
+      REV=""
+    fi
+    # do purpling
+    IN=$OUT
+    XSL=$SYSXSL"/db5/purple.xsl"
+    SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
+    OUT=$T"_15.$SID.xml"
+    xslt -f "$XSL" -v repo.id $REV debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
+    [ $? ] && throw "dp-db5: purple profiling step failed."
+  }
+
+  # validate?
+
+  # complete docbook 5 file compiled: prepare to exit
+  IN=$OUT
+  OUT=$T"_16.db5.xml"
+  xidentity "$IN" > "$OUT" 2>>$DERROR
+  [ $? ] && throw "dp-db5: final transformation failed."
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DDS>>"
+  echo $X
+  echo "<<DDS##"
+  echo ""
+  [ -n "$ERR" ] && return 1 || exit
+} finally {
+  if [ "$DEST" = "tmp" -o "$DEST" = "pipe" ] ; then
+    echo "$OUT"
+    return 0
+  elif [ "$DEBUG" = "false" ] ; then
+    [ "$DEST" = "rel" ] && D=$USRREL || D=$USRREV
+    FOUT=$(xpath -cf $IN "string(/*/*:info//*:filename[@role=\"filename\"]/string())")
+    [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")
+    p:cp -r -f "$OUT" "$D/$FOUT.xml"
+    echo "$D/$FOUT.xml"
+    clean
+    return 0
+  else
+    echo "$OUT"
+    echo "" 2>>$DERROR
+    echo "##DDS>>" 2>>$DERROR
+    echo "DEBUG MODE: $OUT ($FOUT)" 2>>$DERROR
+    echo "<<DDS##" 2>>$DERROR
+    echo "" 2>>$DERROR
+    return 0
+  fi
+}
