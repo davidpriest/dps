@@ -1,0 +1,53 @@
+# Displays XPath matches in a publication
+function usage {
+  echo "Display XPath Matches"
+  echo "dxpath pubid|path xpath"
+  #  echo "dxpath [-l|--library libdir] pubid|path xpath"
+  #  echo "  -l        : look in this library directory"
+  #  echo "  libdir    : '$UPUB'"
+  echo "  pubid     : the unique xml:id of a publication"
+  echo "  path      : the absolute path of the publication"
+  echo "  xpath     : an XPath"
+  echo "Returns the result of the xpath command."
+} ;
+
+unset P
+unset PID
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -l)               
+      shift; [ -n "$1" ] && UPUB=$1
+      ;;
+    -?|-h|--help)
+      usage; exit
+      ;;
+    *)
+    [ -n "$P" ] && XP=$1 || P=$1 
+      ;;
+  esac
+  shift
+done
+
+try {
+  du_setpub
+ 
+  # inclusions
+  OUT=$T".xml"
+  xinclude "$P" > "$OUT"
+  [ $? ] && throw "dxpath: Inclusion failed."
+  # xpath
+  RES=$<(xpath -cf $OUT "$XP")
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DDS>>"
+  echo $X
+  echo "<<DDS##"
+  echo ""
+  return 1
+} finally {
+  xecho $RES
+  rm -r -f $OUT
+  return 0
+}

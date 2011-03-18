@@ -1,0 +1,11 @@
+#ignore
+home
+opt
+root
+tmp
+TODO
+usr
+var
+\.setenv
+\.hg*
+\.svn*

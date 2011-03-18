@@ -1,0 +1,79 @@
+# Publish PDF
+function usage {
+  echo "Publish XML:FO Document"
+  echo "dp-pdf $DUSETOPTS"
+  echo ""
+}
+
+try {
+  du_setopt_dp $@
+  du_setpub
+
+  if [ "$DEST" != "pipe" ] ; then
+    # make a single, profiled XML:FO document
+    [ -e $P ] && IN=$(dp-fo $P1 $P2 $P3 --tmp $P $PF) || throw "dp-pdf: No such source document $P"
+  else
+    # use existing XML:FO document
+    [ -e $P ] && IN=$P || throw "dp-pdf: No such compiled document $P"  
+  fi
+  # dp-fo transformation puts destination filename into @role
+  FOUT=$(xpath -cf $IN "string(/*/@role/string())")
+  [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")
+
+  # transform XML:FO to PDF
+  CP="$XEP/lib/crimson.jar:$XEP/lib/saxon.jar:$XEP/lib/xep.jar:$XEP/lib/xt.jar"
+  OUT=$T"_31.pdf"
+  eval "java -Xms128m -Xmx512m -cp {$CP} -Dcom.renderx.xep.CONFIG=$USRETC/xep.config.xml com.renderx.xep.XSLDriver -quiet -xml $IN -pdf $OUT" >>$DERROR 2>>$DERROR
+  [ $? ] && throw "dp-pdf: PDF rendering failed."
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DDS>>"
+  echo $X
+  echo "<<DDS##"
+  echo ""
+  [ -n "$ERR" ] && return 1 || exit
+} finally {
+  if [ "$DEST" = "tmp" -o "$DEST" = "pipe" ] ; then
+    echo "$OUT"
+    return 0
+  elif [ "$DEBUG" = "false" ] ; then
+    [ "$DEST" = "rel" ] && D=$USRREL || {
+      D=$USRREV
+      unset REV
+      if [ -e $USRDIR/etc/config.properties ] ; then
+        REPO=$(xproperties -in $USRDIR/etc/config.properties -v repo.type)
+        case "$REPO" in
+          hg|mercurial)
+            REV=$(eval hg --cwd $UPUB id --id)
+            ;;
+          svn)
+            REV=$(eval svn info --xml $UPUB | xpath "//commit/@revision/string()")
+            ;;
+          git)
+            REV=$(eval git log -1 --pretty=format:%h -- $UPUB)
+            ;;
+          *)
+            REV=""
+            ERR="dp-pdf: repotype not set in $USRDIR/etc/config.properties; "
+            ;;
+        esac
+        REV=$(xpath -n "substring(\"$REV\",1,12)") #12digit rev
+        FOUT=$FOUT"-"$REV
+      fi
+    }
+    p:cp -r -f "$OUT" "$D/$FOUT.pdf"
+    echo "$D/$FOUT.pdf"
+    clean
+    return 0
+  else
+    echo "$OUT"
+    echo "" 2>>$DERROR
+    echo "##DDS>>" 2>>$DERROR
+    echo "DEBUG MODE: $OUT" 2>>$DERROR
+    echo "<<DDS##" 2>>$DERROR
+    echo "" 2>>$DERROR
+    return 0
+  fi
+}

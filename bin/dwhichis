@@ -1,0 +1,36 @@
+# returns the publication id of the root file for a path
+function usage {
+  echo "Return the root @xml:id for a full path"
+  echo "dwhichis path"
+  echo "  path      : the absolute path of the publication"
+} ;
+
+unset P
+unset PID
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -?|-h|--help)
+      usage; exit
+      ;;
+    *)
+      [ -n "$1" ] && P=$1
+      ;;
+  esac
+  shift
+done
+
+try {
+  if [ -e $P ] ; then
+    PID=$(xpath -cf $P "/*/@xml:id/string()")
+    [ -z $P ] && throw "dwhichis: there is not root id at $P."
+  else
+    throw "dwhereis: Path to file required."
+  fi
+}
+catch X {
+  echo $X
+  exit 1
+} finally {
+  echo $PID
+  return 0
+}

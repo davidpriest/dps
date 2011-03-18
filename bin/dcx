@@ -1,0 +1,44 @@
+# Counts XPath patterns in a publication
+function usage {
+  echo "Count XPath Occurences"
+  echo "dcx pubid|path xpath"
+  #  echo "dcx [-l|--library libdir] pubid|path xpath"
+  #  echo "  -l        : look in this library directory"
+  #  echo "  libdir    : '$UPUB'"
+  echo "  pubid     : the unique xml:id of a publication"
+  echo "  path      : the absolute path of the publication"
+  echo "  xpath     : a countable XPath"
+} ;
+
+unset P
+unset PID
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -l)               
+      shift; [ -n "$1" ] && UPUB=$1
+      ;;
+    -?|-h|--help)
+      usage; exit
+      ;;
+    *)
+    [ -n "$P" ] && XP=$XP" $1" || P=$1 
+      ;;
+  esac
+  shift
+done
+
+try {
+  du_setpub
+  
+  # make inclusions, run through stock "count" xpath
+  IN=$(dp-db5 $P1 --tmp -l $UPUB $PID)
+  OUT=$<(xpath -i $P "count($XP)")
+}
+catch X {
+  echo $X
+  exit 1
+} finally {
+  echo "$XP : $COUNT"
+  rm -r -f $IN
+  return 0
+}
