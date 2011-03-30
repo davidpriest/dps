@@ -7,15 +7,15 @@ REM these variables may be redefined in private settings
 set XROOT=%CD:\=/%
 
 REM hfs root directories
-set BINDIR=%XROOT%/bin
-set ETCDIR=%XROOT%/etc
+set BINDIR=%XROOT%/dds/bin
+set ETCDIR=%XROOT%/dds/etc
 set HOMEDIR=%XROOT%/home
-set LIBDIR=%XROOT%/lib
+set LIBDIR=%XROOT%/dds/lib
 set OPTDIR=%XROOT%/opt
 if not exist %OPTDIR% (
   mkdir %XROOT:/=\%\opt
 )
-set SBINDIR=%XROOT%/sbin
+set SBINDIR=%XROOT%/dds/sbin
 set TEMPDIR=%XROOT%/tmp
 if not exist %TEMPDIR% (
   mkdir %XROOT:/=\%\tmp
@@ -26,6 +26,11 @@ if not exist %VARDIR% (
   mkdir %VARDIR:/=\%\log
 )
 
+REM XMLSH settings
+set PATH=%XMLSH%/win32;%PATH%
+set XPATH=%XROOT%/usr/bin;%SBINDIR%;%BINDIR%
+set XLOGFILE=%XROOT%/var/log/xmlsh.log
+
 REM at a minimum, XMLSH required
 set XMLSH=%OPTDIR%/xmlsh_1_1_4
 
@@ -33,13 +38,7 @@ if not exist %XMLSH% (
   echo "setenv: %XMLSH% not found. Install XMLSH. See README."
 )
 
-REM XMLSH settings
-set PATH=%XMLSH%/win32;%PATH%
-set XPATH=%XROOT%/usr/bin;%SBINDIR%;%BINDIR%
-set XLOGFILE=%XROOT%/var/log/xmlsh.log
-
 echo "Booting DDS"
 xmlsh -rcfile %SBINDIR%/boot
 
 exit /B
-

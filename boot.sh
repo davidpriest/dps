@@ -6,15 +6,21 @@
 export XROOT=$PWD
 
 #hfs root directories
-export BINDIR=$XROOT/bin
-export ETCDIR=$XROOT/etc
+export BINDIR=$XROOT/dds/bin
+export ETCDIR=$XROOT/dds/etc
 export HOMEDIR=$XROOT/home
-export LIBDIR=$XROOT/lib
+export LIBDIR=$XROOT/dds/lib
 export OPTDIR=$XROOT/opt ; [ ! -e $OPTDIR ] && mkdir $OPTDIR
-export SBINDIR=$XROOT/sbin
+export SBINDIR=$XROOT/dds/sbin
 export TEMPDIR=$XROOT/tmp ; [ ! -e $TEMPDIR ] && mkdir $TEMPDIR
 export USRDIR=$XROOT/usr
 export VARDIR=$XROOT/var ; [ ! -e $VARDIR ] && mkdir -p $VARDIR/log
+
+# XMLSH settings
+export XMLSH=$OPTDIR/xmlsh_1_1_4
+export PATH=$XMLSH/unix:$PATH
+export XPATH=$XROOT/usr/bin:$SBINDIR:$BINDIR
+export XLOGFILE=$XROOT/var/log/xmlsh.log
 
 # at a minimum, XMLSH required
 [ ! -e $XMLSH ] && { 
@@ -28,12 +34,6 @@ export VARDIR=$XROOT/var ; [ ! -e $VARDIR ] && mkdir -p $VARDIR/log
   echo "Run '. setenv' again."
   return 1 
 }
-
-# XMLSH settings
-export XMLSH=$OPTDIR/xmlsh_1_1_4
-export PATH=$XMLSH/unix:$PATH
-export XPATH=$XROOT/usr/bin:$SBINDIR:$BINDIR
-export XLOGFILE=$XROOT/var/log/xmlsh.log
 
 # load private settings (varies with account; may contain private information)
 #if [ "$HOSTNAME" == "my.hostname" ]; then
