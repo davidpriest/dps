@@ -1,0 +1,31 @@
+# Query Rally
+function usage {
+  echo "Query a Rally Project"
+  echo "rally_query username password query"
+  echo "Returns the query response."
+} ;
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -?|-h|--help)
+      usage; exit
+      ;;
+    *)
+      ;;
+  esac
+  shift
+done
+
+try {
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DDS>>"
+  echo $X
+  echo "<<DDS##"
+  echo ""
+  return 1
+} finally {
+  return 0
+}
