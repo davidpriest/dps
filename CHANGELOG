@@ -1,4 +1,5 @@
-
+11Mar30 DCP Tweak
+  - rename setenv to boot.sh, fix for one-step startup process
 11Mar18 DCP Initialized.
   - initialized repo using existing DDS
   - separated rally component into own feature

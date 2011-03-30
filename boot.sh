@@ -42,5 +42,5 @@ export XLOGFILE=$XROOT/var/log/xmlsh.log
 #fi
 [ -f .setenv ] && . .setenv
 
-alias boot="echo Booting XMLSH; xmlsh -rcfile $SBINDIR/boot"
-echo "Type 'boot' to start the DDS shell."
+echo Booting XMLSH
+xmlsh -rcfile $SBINDIR/boot
