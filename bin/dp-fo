@@ -26,7 +26,8 @@ try {
   [ ! -e "$XSL" ] && XSL="$SYSXSL/fo/nwalsh.xsl"
   SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
   OUT=$T"_21.$SID.fo.xml"
-  xslt -f "$XSL" -v target.database.document "$VARDIR/targets/pdf/olinkdb.xml" db5.path "$XSLFO" img.src.path "$BASE/" debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
+  echo "FO: xslt -f \"$XSL\" -v target.database.document \"$VARDIR/targets/pdf/olinkdb.xml\" db5.path \"$XSLFO\" img.src.path \"$BASE/\" debug.mode \"$DEBUG\" draft.mode \"$DRAFT\" < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
+  xslt -f "$XSL" -v target.database.document "$VARDIR/targets/pdf/olinkdb.xml" db5.path "$XSLFO" img.src.path "$BASE/" debug.mode "$DEBUG" draft.mode "$DRAFT" < "$IN" > "$OUT" 2>>$DERROR
   [ $? ] && throw "dp-fo: Transformation failed."
   [ -n "$ERR" ] && throw $ERR
 }

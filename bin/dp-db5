@@ -21,6 +21,7 @@ try {
   XSL=$SYSXSL"/db5/dds-profile.xsl"
   SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
   OUT=$T"_12.$SID.xml"
+  echo "PROFILE DDS: xslt -f \"$XSL\" -v debug.mode $DEBUG draft.mode $DRAFT < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
   xslt -f "$XSL" -v debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
   [ $? ] && throw "dp-db5: DDS conventions profiling step failed."
 
@@ -30,6 +31,7 @@ try {
     XSL=$XSLFO"/profiling/profile.xsl"
     OUT=$T"_13.db5_profile.xml"
     #TODO: better profiling: this requires all profile attributes to be unique
+    echo "PROFILE DB5: xslt -f \"$XSL\" -v profile.arch $PF profile.audience $PF profile.condition $PF profile.lang $PF profile.os $PF profile.revision $PF profile.security $PF profile.status $PF profile.userlevel $PF profile.vendor $PF profile.wordsize $PF debug.mode $DEBUG draft.mode $DRAFT < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
     xslt -f "$XSL" -v profile.arch $PF profile.audience $PF profile.condition $PF profile.lang $PF profile.os $PF profile.revision $PF profile.security $PF profile.status $PF profile.userlevel $PF profile.vendor $PF profile.wordsize $PF debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
     [ $? ] && throw "dp-db5: Docbook conventions profiling step failed."
   }
@@ -39,6 +41,7 @@ try {
   XSL=$SYSXSL"/uniqid.xsl"
   SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
   OUT=$T"_14.$SID.xml"
+  echo "FIX IDS: xslt -f \"$XSL\" -v debug.mode $DEBUG draft.mode $DRAFT < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
   xslt -f "$XSL" -v debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
   [ $? ] && throw "dp-db5: DDS ID Fixing step failed."
   
@@ -81,6 +84,7 @@ try {
     XSL=$SYSXSL"/db5/purple.xsl"
     SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
     OUT=$T"_15.$SID.xml"
+    echo "PURPLE: xslt -f \"$XSL\" -v repo.id $REV debug.mode $DEBUG draft.mode $DRAFT < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
     xslt -f "$XSL" -v repo.id $REV debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
     [ $? ] && throw "dp-db5: purple profiling step failed."
   }

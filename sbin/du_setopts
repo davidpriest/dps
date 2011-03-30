@@ -1,9 +1,9 @@
 DUSETOPTS=<{{[--rel|--rev|--pipe|--tmp] pubid [profile [profile]]
   --pipe    : skip default pipeline; pubid is path to previous pipeline output
-  --rev     : move to review directory"
-  --rel     : move to release directory"
+  --rev     : move to review directory
+  --rel     : move to release directory
   --tmp     : leave in temp dir; use default pipeline"
-  pubid     : the publication ID"
+  pubid     : the publication ID
   profile   : enable profile(s)"
 Returns path to published document.
 }}>

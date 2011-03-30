@@ -41,11 +41,6 @@ NOTE: If tidied, restructure fo:char blocks to remove whitespace
   <xsl:attribute-set name="draft.glossterm.properties">
     <xsl:attribute name="border-bottom">thin dotted grey</xsl:attribute>
   </xsl:attribute-set>
-<<<<<<< local
-
-
-=======
->>>>>>> other
   <!-- COMMENTS/REMARKS: colourize -->
   <xsl:template match="d:comment[&comment.block.parents;]|d:remark[&comment.block.parents;]">
     <xsl:if test="$draft.mode='yes'">
