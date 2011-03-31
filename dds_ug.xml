@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book conformance="DDS-1.0" status="draft" version="5.0" xml:lang="en"
+      xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:m="http://www.w3.org/1998/Math/MathML"
+      xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:fo="http://www.w3.org/1999/XSL/Format"
+      xmlns:db="http://docbook.org/ns/docbook">
+  <info>
+    <title version="5.0">Docbook Publishing</title>
+
+    <subtitle>davidpriest.ca docbook system</subtitle>
+
+    <abstract>
+      <para>A user guide for DDS.</para>
+
+      <para>Filename: <filename role="filename">DDS_User_Guide</filename></para>
+
+      <para>Stylesheet: <filename role="style">dds</filename></para>
+    </abstract>
+
+    <pubdate><?dbtimestamp format="Y.b.d"?></pubdate>
+
+    <revhistory>
+      <revision>
+        <date>11-Mar-31</date>
+
+        <authorinitials>DCP</authorinitials>
+
+        <revremark>Updated: new structure, commands, functions.</revremark>
+      </revision>
+
+      <revision>
+        <date>11-Feb-11</date>
+
+        <authorinitials>DCP</authorinitials>
+
+        <revremark>Started.</revremark>
+      </revision>
+    </revhistory>
+
+    <copyright>
+      <year>2011</year>
+
+      <holder>David Priest</holder>
+    </copyright>
+
+    <collab>
+      <person>
+        <personname>david priest</personname>
+
+        <email>docs@davidpriest.ca</email>
+      </person>
+
+      <org>
+        <orgname class="informal">davidpriest.ca</orgname>
+
+        <uri>http://davidpriest.ca</uri>
+      </org>
+    </collab>
+  </info>
+
+  <chapter>
+    <title>Using DDS</title>
+
+    <para>DDS hides directory structure and xi:include structure. Instead, it works on
+    <emphasis>publications</emphasis>: a root document (article, book, part, set, or
+    reference) referred to by its <tag>xml:id</tag>.</para>
+
+    <para>The <command>dls</command> command will show a listing of all publications found
+    in <filename>home</filename> and its subdirectories.</para>
+
+    <para>The <command>dp-pdf</command>, <command>dp-chm</command>, and
+    <command>dp-wh</command> commands transform a publication into PDF, Microsoft CHM
+    source, or Webhelp, respectively. The transformations may be customized by overriding
+    the stock transformations.</para>
+
+    <para><command>dp-pf</command> will list all profiling information for a document;
+    <command>dp-lint</command> will list trademarks and other useful information.</para>
+
+    <para>For those times you need to work with directory structures,
+    <command>dwhereis</command> will provide the absolute path to a publication; given a
+    path, <command>dwhichis</command> will identify the root element
+    <tag>xml:id</tag>.</para>
+  </chapter>
+
+  <chapter>
+    <title>DDS Internals</title>
+
+    <section>
+      <title>Publication Structure</title>
+
+      <para>The following Docbook5 root elements are recognized as publications:
+      <tag>article</tag>, <tag>book</tag>, <tag>part</tag>, <tag>set</tag>,
+      <tag>reference</tag>.</para>
+
+      <para>Publications <emphasis role="bold">must</emphasis> have an <tag>info</tag>
+      element as a child of the root element. The <tag>info</tag> element <emphasis
+      role="bold">must</emphasis> have two <tag>filename</tag> descendants:<variablelist>
+          <varlistentry>
+            <term>filename[role="filename"]</term>
+
+            <listitem>
+              <para>The output file name for the publication, with no extension. The
+              publication will be placed in <filename>home/doc-review</filename> or
+              <filename>home/doc-release</filename>. PDF files will be given the
+              <filename>.pdf</filename> extension. CHM and Webhelp output will be placed
+              in a directory, with <filename>-chm</filename> or
+              <filename>-webhelp</filename> appended to the name.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>filename[role="style"]</term>
+
+            <listitem>
+              <para>The suffix for the XSL transformation that will be applied to the
+              publication. The <filename>usr/lib/xslt</filename> directory will be checked
+              for the presence of an appropriate transformation
+              (<filename>fo/<replaceable>style</replaceable>/<replaceable>root-element</replaceable>.xsl</filename>,
+              <filename>chm/<replaceable>style</replaceable>/<replaceable>root-element</replaceable>.xsl</filename>,
+              <filename>webhelp/<replaceable>style</replaceable>/<replaceable>root-element</replaceable>.xsl</filename>).</para>
+
+              <para>Failing to discover a customized transformation, the pipeline will
+              attempt to use the publication's root element to identify the appropriate
+              stock transformation (ie. <filename>lib/xslt/fo/article.xsl</filename>,
+              <filename>lib/xslt/chm/book.xsl</filename>).<note>
+                  <para>DDS does not yet have stock transformations for all combinations
+                  of root elements and output formats.</para>
+                </note></para>
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+    </section>
+
+    <section xml:id="dds_profiling">
+      <title>Profiling</title>
+
+      <para>DDS supports simple profiling through the use of four conditions:<variablelist>
+          <varlistentry>
+            <term>*[condition="nopub"]</term>
+
+            <listitem>
+              <para>Do not publish this element under any condition.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>*[condition="draft"]</term>
+
+            <listitem>
+              <para>Publish this element only when publishing a review edition.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>*[condition="inc: <replaceable>id</replaceable>"]</term>
+
+            <listitem>
+              <para>Publish this element only if it or an ancestor element has the
+              specified xml:id.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>*[condition="exc: <replaceable>id</replaceable>"]</term>
+
+            <listitem>
+              <para>Exclude this element if it or an ancestor element has the specified
+              xml:id.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
+      <para>It also has limited (but improving) support for Docbook XSL profiling
+      features, using audience, os, vendor, etceteras attributes.</para>
+    </section>
+
+    <section>
+      <title>Purple Numbering</title>
+
+      <para>When publishing a review PDF, &#8220;purple numbering&#8221; and changebars
+      are applied during the transformation process. Purple numbers are formed by
+      combining the repository revision number and element position. Used in debugging, a
+      purple number allows you to recreate the original document and identify the exact
+      paragraph in which an error was made.</para>
+
+      <para>Changebars are indicated using the background colour and text styling of the
+      purple number.</para>
+
+      <section>
+        <title>Configuring Purple Numbers</title>
+
+        <para>The DDS repository does not track the <filename>home</filename> and
+        <filename>usr</filename> directories, allowing you to use a different CVS for
+        client documentation. In <filename>usr/etc/config.properties</filename>, set
+        <varname>repotype</varname> to <application>svn</application>,
+        <application>mercurial</application>, or <application>git</application>
+        appropriately.</para>
+      </section>
+    </section>
+
+    <section>
+      <title>Custom Commands</title>
+
+      <para>DDS provides basic publishing pipelines for PDF, CHM, and Webhelp. Chances
+      are, however, that you will need to create a custom pipeline to accommodate
+      branding, media inclusion, queries, and other complex requirements.</para>
+
+      <para>Customization is supported by providing several commands that produce
+      intermediate files; of particular note, the <command>dp-db5</command> command. This
+      pipeline performs inclusions, xml:id normalization, DDS profiling, and optional
+      purple numbering and changebars. Its return value is a full path to the resulting
+      file.</para>
+
+      <para>You can then perform custom transformation and modification of the collated
+      and profiled Docbook file, before passing it into the
+      <command>dp-fo</command>/<filename>dp-pdf</filename>, <filename>dp-chm</filename>,
+      or <command>dp-wh</command> commands. Copying the final results from
+      <filename>tmp</filename> to <filename>doc-review</filename> or
+      <filename>doc-release</filename> will be the final step of your custom
+      pipeline.</para>
+
+      <para>Here is a simple example that transforms a specific document
+      (<filename>my_publication</filename>) to PDF, with an intermediate step that allows
+      branding of a product name and a destination file name that differs from the one
+      defined in the publication's
+      <tag><replaceable>root</replaceable>/info/filename[role="filename"]</tag>
+      element.</para>
+
+      <para><programlisting>BRAND=$1&#10;DRAFT="no"&#10;DEBUG="no"&#10;P="my_publication"&#10;du_setpub&#10;&#10;try {&#10;  IN=$(dp-db5 --tmp $PID)&#10;  OUT=$T"_16.db5.xml"&#10;  xed -i $IN -r "$BRAND" -e "//*:phrase[contains(text(),'xBRANDx')]" &gt; $OUT&#10;  IN=$(dp-fo --tmp $OUT)&#10;  OUT=$(dp-pdf --tmp $IN)&#10;  }&#10;  catch X {&#10;    echo ""&#10;    echo "##DDS&gt;&gt;"&#10;    echo $X&#10;    echo "&lt;&lt;DDS##"&#10;    echo ""&#10;    return 1&#10;  } finally {&#10;    FOUT=$BRAND"_User_Guide.pdf"&#10;    p:cp -r -f "$OUT" "$USRREL/$FOUT"&#10;    echo "$USRREL/$FOUT"&#10;    clean&#10;    return 0&#10;  }</programlisting></para>
+    </section>
+  </chapter>
+
+  <appendix>
+    <title>DDS User Commands</title>
+
+    <para>All commands support <command><replaceable>cmd</replaceable> -?</command> to
+    show command help. These commands are found in <filename>bin</filename>.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term>dhelp</term>
+
+        <listitem>
+          <para>Lists available commands.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>clean</term>
+
+        <listitem>
+          <para>Removes all files from the temporary (build) directory.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dlint</term>
+
+        <listitem>
+          <para>Displays a report of all trademarks in the document.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dls</term>
+
+        <listitem>
+          <para>Lists all documents available for publication.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dp-chm</term>
+
+        <listitem>
+          <para>Builds a Microsoft CHM source directory. Use HTMLHelp Workshop or other
+          CHM compiler to create a Microsoft help document.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dp-db5</term>
+
+        <listitem>
+          <para>Builds a Docbook document, with inclusions, IDs made unique, basic DDS
+          profiling (see <xref linkend="dds_profiling"/>), and if draft mode is enabled,
+          purple numbering.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dp-fo</term>
+
+        <listitem>
+          <para>Builds an XML:FO document.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dp-pdf</term>
+
+        <listitem>
+          <para>Builds a PDF document. <trademark class="registered">RenderX</trademark>
+          <trademark>XEP</trademark> must be installed in <filename>opt</filename>.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dp-wh</term>
+
+        <listitem>
+          <para>Builds a Webhelp directory, with search enabled.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dpf</term>
+
+        <listitem>
+          <para>Show profiling information for the document.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dwhereis</term>
+
+        <listitem>
+          <para>Given a publication ID, returns the path to the document root.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dwhichis</term>
+
+        <listitem>
+          <para>Given a document path, returns the document ID.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>dxpath</term>
+
+        <listitem>
+          <para>Displays a list of all matching XPath matches.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </appendix>
+
+  <appendix>
+    <title>DDS Scripting Commands</title>
+
+    <para>A few commands are available for setting up common variables. These commands are
+    found in <filename>sbin</filename>. Most of them set variables that are used
+    internally by the publishing commands.</para>
+
+    <para><variablelist>
+        <varlistentry>
+          <term>boot</term>
+
+          <listitem>
+            <para>An XMLSH script called by the boot process to configure a number of
+            DDS-specific variables and functions.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>kickstart</term>
+
+          <listitem>
+            <para>An XMLSH script called by the boot process to confirm that component
+            parts are available; if parts are missing, an attempt is made to download and
+            install them (generally to <filename>opt</filename>).</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>du_setopts</term>
+
+          <listitem>
+            <para>The <function>du_setopt_dp</function> function parses command line
+            options and sets a number of internal variables. This function is used by the
+            dp-db5/-chm/-fo/-pdf/-wh commands.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>du_setpub</term>
+
+          <listitem>
+            <para>The <function>du_setpub</function> function takes a publication XML:ID
+            or a path, and sets a number of internal variables. This function is used by
+            many commands, to provide flexibility in passing a PID or PATH to the
+            command.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>du_setrally</term>
+
+          <listitem>
+            <para>The <function>du_setrally</function> function reads the
+            <filename>etc/config.properties</filename> file and sets a number of internal
+            variables used in querying Rally's API.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </appendix>
+
+  <appendix>
+    <title>Repository Structure</title>
+
+    <para>DDS endeavours to follow the <uri
+    xlink:href="http://www.pathname.com/fhs/pub/fhs-2.3.html">Filesystem Hierarchy
+    Standard</uri>.</para>
+
+    <para>The DDS core comprises:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term>bin</term>
+
+        <listitem>
+          <para>DDS commands and pipelines.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>etc</term>
+
+        <listitem>
+          <para>DDS configuration files</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>lib</term>
+
+        <listitem>
+          <para>DDS libraries.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>sbin</term>
+
+        <listitem>
+          <para>DDS administration utilities.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>End-users of DDS will make use of the following directories:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term>home</term>
+
+        <listitem>
+          <para>Publications library, containing directories, Docbook files, and
+          referenced images.</para>
+
+          <para>DDS-published documents go to <filename>doc-review</filename> or
+          <filename>doc-release</filename>.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>usr</term>
+
+        <listitem>
+          <para>DDS customizations: commands, transformations, and other support.</para>
+
+          <variablelist>
+            <varlistentry>
+              <term>bin</term>
+
+              <listitem>
+                <para>Commands</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>lib</term>
+
+              <listitem>
+                <para>Libraries</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Several other directories provide support and local storage:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term>opt</term>
+
+        <listitem>
+          <para>Third-party software required for DDS, including XMLSH, docbook-xsl-ns,
+          Xalan, etc. Most of these are installed automagically by DDS when it is first
+          run.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>tmp</term>
+
+        <listitem>
+          <para>Temporary files. Cleaned when the system is started.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>var</term>
+
+        <listitem>
+          <para>Persistent logs and caches.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </appendix>
+</book>

@@ -28,7 +28,7 @@ Booting
 
 Windows:
 
-  1. At a command prompt in this directory, type `.\boot` and press `enter`.
+  1. At a command prompt in this directory, type `boot` and press `enter`.
   
   2. At the `dds$` prompt, type `dhelp` for help.
 
