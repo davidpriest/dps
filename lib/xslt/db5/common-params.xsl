@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- EXCEPTIONS TO STOCK ../../../opt/docbook-xsl-ns-1.76.1 SETTINGS -->
+<!-- EXCEPTIONS TO STOCK ../../../docbook-xsl-ns-1.76.1 SETTINGS -->
 <!-- **NOT** output specific -->
 <!-- davidpriest.ca dps -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

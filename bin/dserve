@@ -1,11 +1,3 @@
 import commands experimental
 
-
-function dget {
-  F=$1
-  Q=$2
-  echo $F
-  echo $Q
-}
-
-httpserver -port 8080 -get dget -put dput -post dpost start
+httpserver -port 8080 -get 'dget $@' -put 'dput $@' -post 'dpost $@' start

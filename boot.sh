@@ -6,12 +6,12 @@
 export XROOT=$PWD
 
 #hfs root directories
-export BINDIR=$XROOT/dps/bin
-export ETCDIR=$XROOT/dps/etc
+export BINDIR=$XROOT/opt/dps/bin
+export ETCDIR=$XROOT/opt/dps/etc
 export HOMEDIR=$XROOT/home
-export LIBDIR=$XROOT/dps/lib
+export LIBDIR=$XROOT/opt/dps/lib
 export OPTDIR=$XROOT/opt ; [ ! -e $OPTDIR ] && mkdir $OPTDIR
-export SBINDIR=$XROOT/dps/sbin
+export SBINDIR=$XROOT/opt/dps/sbin
 export TEMPDIR=$XROOT/tmp ; [ ! -e $TEMPDIR ] && mkdir $TEMPDIR
 export USRDIR=$XROOT/usr
 export VARDIR=$XROOT/var ; [ ! -e $VARDIR ] && mkdir -p $VARDIR/log
