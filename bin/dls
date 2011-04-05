@@ -1,4 +1,4 @@
-# Displays a DDS ls directory listing
+# Displays a DPS ls directory listing
 function usage {
   echo "Publication Library listings"
   echo "dls [-d|h] [-i|--idwarn]"
@@ -31,13 +31,14 @@ try {
   #TODO: use xls -R -l -a ; "contains[@type="file" @readable="true" @path endswith .xml]"
   #TODO: handle multiple filename output
   FL=$(xls -R | xpath "//file[matches(@path,\"$UPUB\")]//file[matches(@name,\".*\.xml\")]/@path/string()")
+  #TODO: fails if no files w/xml:id
   BOOKS=$<(xgrep "/*[contains('{$ROOTS}',local-name()) and @xml:id]" $FL)
   XL=<[ <library type="publications" roots="{$ROOTS}" id="{$GRP}" path="{$UPUB}"/> ]>
   for P in $<(xpath -i $BOOKS "//*:file[not(@path=preceding::*:file/@path)]/@path/string()") ; do
     ID=$(xpath -cf "$P" "/*/@xml:id/string()")
     FOUT=$(xpath -cf "$P" "/*/*:info//*:filename[@role='filename']")
     if [ "$ID" ] && [ "$FOUT" ] && [ ! -n "$NULLIDS" ] ; then
-      XB=$<(xslt -cf "$P" -f "$SYSXSL/dds/pub_to_dcatalog.xsl")
+      XB=$<(xslt -cf "$P" -f "$SYSXSL/dps/pub_to_dcatalog.xsl")
       XL=$<(xed -i $XL -a $XB -m "/*")
     elif [ -n "$NULLIDS" ] ; then
       R=$(xpath -cf "$P" "/*/name()")
@@ -69,7 +70,7 @@ try {
     ;;
   -h)
     echo "Library Contents"
-    XL=$<(xslt -i $XL -f $SYSXSL/dds/dcatalog_to_human.xsl)
+    XL=$<(xslt -i $XL -f $SYSXSL/dps/dcatalog_to_human.xsl)
     ;;
   -x)
     XL=$<(xed -i $XL -d -m "//pub/@root")

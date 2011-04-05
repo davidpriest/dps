@@ -10,7 +10,7 @@
         </xsl:call-template>
             
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:d="http://docbook.org/ns/docbook" version="1.0" id="dds-debug">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:d="http://docbook.org/ns/docbook" version="1.0" id="dps-debug">
    <xsl:template name="debug">
       <xsl:param name="con" select="''"/>
       <xsl:param name="rem" select="''"/>

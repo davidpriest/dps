@@ -1,11 +1,11 @@
 #ignore
-home
+dps
 opt
 root
 tmp
 TODO
-usr
 var
 \.setenv
 \.hg*
 \.svn*
+usr/etc/xep.config.xml

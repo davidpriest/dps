@@ -1,27 +1,27 @@
 =========================================
-davidpriest.ca Documentation System (DDS)
+davidpriest.ca Documentation System (DPS)
 =========================================
 
 setenv      unixy environment. Use ". setenv" at command line prompt.
 boot.bat    windows environment. Use "boot.bat" at command line prompt.
 
-[root]/dds
+[root]/dps
   David's Documentation System
   a bash-like environment for publication production and management.
   "backed up monthly"
 
-  [root]/dds/bin
-    DDS commands and pipelines (used by DDS XMLSH workflows)
+  [root]/dps/bin
+    DPS commands and pipelines (used by DPS XMLSH workflows)
     contains commands used by sysadmin and users. May also contain commands 
     which are used indirectly by scripts.
 
-  [root]/dds/etc
-    DDS configuration files (used by DDS XMLSH workflows)
+  [root]/dps/etc
+    DPS configuration files (used by DPS XMLSH workflows)
     contains configuration files: local file used to control the operation of 
     programs; static, non-executable. 
 
-  [root]/dds/lib    
-    DDS libraries (used by DDS XMLSH workflows)
+  [root]/dps/lib    
+    DPS libraries (used by DPS XMLSH workflows)
     contains those shared library images needed to boot the system and run the
     commands in the root filesystem (/bin, /sbin) "backed up weekly"
         /xslt
@@ -29,7 +29,7 @@ boot.bat    windows environment. Use "boot.bat" at command line prompt.
         /xquery
         /xmlsh?
 
-  [root]/dds/sbin   
+  [root]/dps/sbin   
     Sys Admin Utilities
     Root-only commands are stored in /sbin, /usr/sbin, and /usr/local/sbin. 
     /sbin contains binaries essential for booting, restoring, recovering, and/or repairing the
@@ -67,13 +67,13 @@ boot.bat    windows environment. Use "boot.bat" at command line prompt.
       /src    Literate documentation of client's code
 
 [root]/var    
-  persistent DDS logs and caches
+  persistent DPS logs and caches
   contains variable data files. This includes spool directories and files, 
   administrative and logging data, and transient and temporary files. 
   Everything that once went into /usr that is written to during system 
   operation (as opposed to installation and software maintenance) must be 
   in /var. "backed up daily"
-      /log    DDS log output
+      /log    DPS log output
       
       
 Filesystem Hierarchy Standard

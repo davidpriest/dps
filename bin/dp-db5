@@ -16,14 +16,14 @@ try {
   xinclude "$P" > "$OUT" 2>>$DERROR
   [ $? ] && throw "dp-db5: inclusions step failed."
   
-  # profile: DDS conventions
+  # profile: DPS conventions
   IN=$OUT
-  XSL=$SYSXSL"/db5/dds-profile.xsl"
+  XSL=$SYSXSL"/db5/dps-profile.xsl"
   SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
   OUT=$T"_12.$SID.xml"
-  echo "PROFILE DDS: xslt -f \"$XSL\" -v debug.mode $DEBUG draft.mode $DRAFT < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
+  echo "PROFILE DPS: xslt -f \"$XSL\" -v debug.mode $DEBUG draft.mode $DRAFT < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
   xslt -f "$XSL" -v debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
-  [ $? ] && throw "dp-db5: DDS conventions profiling step failed."
+  [ $? ] && throw "dp-db5: DPS conventions profiling step failed."
 
   # profile: DocBook conventions
   [ "$PF" ] && {
@@ -43,7 +43,7 @@ try {
   OUT=$T"_14.$SID.xml"
   echo "FIX IDS: xslt -f \"$XSL\" -v debug.mode $DEBUG draft.mode $DRAFT < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
   xslt -f "$XSL" -v debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
-  [ $? ] && throw "dp-db5: DDS ID Fixing step failed."
+  [ $? ] && throw "dp-db5: DPS ID Fixing step failed."
   
   # tweak?
 
@@ -100,9 +100,9 @@ try {
 }
 catch X {
   echo ""
-  echo "##DDS>>"
+  echo "##DPS>>"
   echo $X
-  echo "<<DDS##"
+  echo "<<DPS##"
   echo ""
   [ -n "$ERR" ] && return 1 || exit
 } finally {
@@ -120,9 +120,9 @@ catch X {
   else
     echo "$OUT"
     echo "" 2>>$DERROR
-    echo "##DDS>>" 2>>$DERROR
+    echo "##DPS>>" 2>>$DERROR
     echo "DEBUG MODE: $OUT ($FOUT)" 2>>$DERROR
-    echo "<<DDS##" 2>>$DERROR
+    echo "<<DPS##" 2>>$DERROR
     echo "" 2>>$DERROR
     return 0
   fi

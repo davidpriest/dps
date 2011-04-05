@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book conformance="DDS-1.0" status="draft" version="5.0" xml:lang="en"
+<book xml:id="dps_ug" version="5.0" xml:lang="en"
       xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
       xmlns:m="http://www.w3.org/1998/Math/MathML"
@@ -13,11 +13,11 @@
     <subtitle>davidpriest.ca docbook system</subtitle>
 
     <abstract>
-      <para>A user guide for DDS.</para>
+      <para>A user guide for DPS.</para>
 
-      <para>Filename: <filename role="filename">DDS_User_Guide</filename></para>
+      <para>Filename: <filename role="filename">DPS_User_Guide</filename></para>
 
-      <para>Stylesheet: <filename role="style">dds</filename></para>
+      <para>Stylesheet: <filename role="style">dps</filename></para>
     </abstract>
 
     <pubdate><?dbtimestamp format="Y.b.d"?></pubdate>
@@ -62,9 +62,9 @@
   </info>
 
   <chapter>
-    <title>Using DDS</title>
+    <title>Using DPS</title>
 
-    <para>DDS hides directory structure and xi:include structure. Instead, it works on
+    <para>DPS hides directory structure and xi:include structure. Instead, it works on
     <emphasis>publications</emphasis>: a root document (article, book, part, set, or
     reference) referred to by its <tag>xml:id</tag>.</para>
 
@@ -86,7 +86,7 @@
   </chapter>
 
   <chapter>
-    <title>DDS Internals</title>
+    <title>DPS Internals</title>
 
     <section>
       <title>Publication Structure</title>
@@ -126,7 +126,7 @@
               attempt to use the publication's root element to identify the appropriate
               stock transformation (ie. <filename>lib/xslt/fo/article.xsl</filename>,
               <filename>lib/xslt/chm/book.xsl</filename>).<note>
-                  <para>DDS does not yet have stock transformations for all combinations
+                  <para>DPS does not yet have stock transformations for all combinations
                   of root elements and output formats.</para>
                 </note></para>
             </listitem>
@@ -134,10 +134,10 @@
         </variablelist></para>
     </section>
 
-    <section xml:id="dds_profiling">
+    <section xml:id="dps_profiling">
       <title>Profiling</title>
 
-      <para>DDS supports simple profiling through the use of four conditions:<variablelist>
+      <para>DPS supports simple profiling through the use of four conditions:<variablelist>
           <varlistentry>
             <term>*[condition="nopub"]</term>
 
@@ -192,7 +192,7 @@
       <section>
         <title>Configuring Purple Numbers</title>
 
-        <para>The DDS repository does not track the <filename>home</filename> and
+        <para>The DPS repository does not track the <filename>home</filename> and
         <filename>usr</filename> directories, allowing you to use a different CVS for
         client documentation. In <filename>usr/etc/config.properties</filename>, set
         <varname>repotype</varname> to <application>svn</application>,
@@ -204,13 +204,13 @@
     <section>
       <title>Custom Commands</title>
 
-      <para>DDS provides basic publishing pipelines for PDF, CHM, and Webhelp. Chances
+      <para>DPS provides basic publishing pipelines for PDF, CHM, and Webhelp. Chances
       are, however, that you will need to create a custom pipeline to accommodate
       branding, media inclusion, queries, and other complex requirements.</para>
 
       <para>Customization is supported by providing several commands that produce
       intermediate files; of particular note, the <command>dp-db5</command> command. This
-      pipeline performs inclusions, xml:id normalization, DDS profiling, and optional
+      pipeline performs inclusions, xml:id normalization, DPS profiling, and optional
       purple numbering and changebars. Its return value is a full path to the resulting
       file.</para>
 
@@ -229,12 +229,12 @@
       <tag><replaceable>root</replaceable>/info/filename[role="filename"]</tag>
       element.</para>
 
-      <para><programlisting>BRAND=$1&#10;DRAFT="no"&#10;DEBUG="no"&#10;P="my_publication"&#10;du_setpub&#10;&#10;try {&#10;  IN=$(dp-db5 --tmp $PID)&#10;  OUT=$T"_16.db5.xml"&#10;  xed -i $IN -r "$BRAND" -e "//*:phrase[contains(text(),'xBRANDx')]" &gt; $OUT&#10;  IN=$(dp-fo --tmp $OUT)&#10;  OUT=$(dp-pdf --tmp $IN)&#10;  }&#10;  catch X {&#10;    echo ""&#10;    echo "##DDS&gt;&gt;"&#10;    echo $X&#10;    echo "&lt;&lt;DDS##"&#10;    echo ""&#10;    return 1&#10;  } finally {&#10;    FOUT=$BRAND"_User_Guide.pdf"&#10;    p:cp -r -f "$OUT" "$USRREL/$FOUT"&#10;    echo "$USRREL/$FOUT"&#10;    clean&#10;    return 0&#10;  }</programlisting></para>
+      <para><programlisting>BRAND=$1&#10;DRAFT="no"&#10;DEBUG="no"&#10;P="my_publication"&#10;du_setpub&#10;&#10;try {&#10;  IN=$(dp-db5 --tmp $PID)&#10;  OUT=$T"_16.db5.xml"&#10;  xed -i $IN -r "$BRAND" -e "//*:phrase[contains(text(),'xBRANDx')]" &gt; $OUT&#10;  IN=$(dp-fo --tmp $OUT)&#10;  OUT=$(dp-pdf --tmp $IN)&#10;  }&#10;  catch X {&#10;    echo ""&#10;    echo "##DPS&gt;&gt;"&#10;    echo $X&#10;    echo "&lt;&lt;DPS##"&#10;    echo ""&#10;    return 1&#10;  } finally {&#10;    FOUT=$BRAND"_User_Guide.pdf"&#10;    p:cp -r -f "$OUT" "$USRREL/$FOUT"&#10;    echo "$USRREL/$FOUT"&#10;    clean&#10;    return 0&#10;  }</programlisting></para>
     </section>
   </chapter>
 
   <appendix>
-    <title>DDS User Commands</title>
+    <title>DPS User Commands</title>
 
     <para>All commands support <command><replaceable>cmd</replaceable> -?</command> to
     show command help. These commands are found in <filename>bin</filename>.</para>
@@ -285,8 +285,8 @@
         <term>dp-db5</term>
 
         <listitem>
-          <para>Builds a Docbook document, with inclusions, IDs made unique, basic DDS
-          profiling (see <xref linkend="dds_profiling"/>), and if draft mode is enabled,
+          <para>Builds a Docbook document, with inclusions, IDs made unique, basic DPS
+          profiling (see <xref linkend="dps_profiling"/>), and if draft mode is enabled,
           purple numbering.</para>
         </listitem>
       </varlistentry>
@@ -351,7 +351,7 @@
   </appendix>
 
   <appendix>
-    <title>DDS Scripting Commands</title>
+    <title>DPS Scripting Commands</title>
 
     <para>A few commands are available for setting up common variables. These commands are
     found in <filename>sbin</filename>. Most of them set variables that are used
@@ -363,7 +363,7 @@
 
           <listitem>
             <para>An XMLSH script called by the boot process to configure a number of
-            DDS-specific variables and functions.</para>
+            DPS-specific variables and functions.</para>
           </listitem>
         </varlistentry>
 
@@ -413,18 +413,18 @@
   <appendix>
     <title>Repository Structure</title>
 
-    <para>DDS endeavours to follow the <uri
+    <para>DPS endeavours to follow the <uri
     xlink:href="http://www.pathname.com/fhs/pub/fhs-2.3.html">Filesystem Hierarchy
     Standard</uri>.</para>
 
-    <para>The DDS core comprises:</para>
+    <para>The DPS core comprises:</para>
 
     <variablelist>
       <varlistentry>
         <term>bin</term>
 
         <listitem>
-          <para>DDS commands and pipelines.</para>
+          <para>DPS commands and pipelines.</para>
         </listitem>
       </varlistentry>
 
@@ -432,7 +432,7 @@
         <term>etc</term>
 
         <listitem>
-          <para>DDS configuration files</para>
+          <para>DPS configuration files</para>
         </listitem>
       </varlistentry>
 
@@ -440,7 +440,7 @@
         <term>lib</term>
 
         <listitem>
-          <para>DDS libraries.</para>
+          <para>DPS libraries.</para>
         </listitem>
       </varlistentry>
 
@@ -448,12 +448,12 @@
         <term>sbin</term>
 
         <listitem>
-          <para>DDS administration utilities.</para>
+          <para>DPS administration utilities.</para>
         </listitem>
       </varlistentry>
     </variablelist>
 
-    <para>End-users of DDS will make use of the following directories:</para>
+    <para>End-users of DPS will make use of the following directories:</para>
 
     <variablelist>
       <varlistentry>
@@ -463,7 +463,7 @@
           <para>Publications library, containing directories, Docbook files, and
           referenced images.</para>
 
-          <para>DDS-published documents go to <filename>doc-review</filename> or
+          <para>DPS-published documents go to <filename>doc-review</filename> or
           <filename>doc-release</filename>.</para>
         </listitem>
       </varlistentry>
@@ -472,7 +472,7 @@
         <term>usr</term>
 
         <listitem>
-          <para>DDS customizations: commands, transformations, and other support.</para>
+          <para>DPS customizations: commands, transformations, and other support.</para>
 
           <variablelist>
             <varlistentry>
@@ -502,8 +502,8 @@
         <term>opt</term>
 
         <listitem>
-          <para>Third-party software required for DDS, including XMLSH, docbook-xsl-ns,
-          Xalan, etc. Most of these are installed automagically by DDS when it is first
+          <para>Third-party software required for DPS, including XMLSH, docbook-xsl-ns,
+          Xalan, etc. Most of these are installed automagically by DPS when it is first
           run.</para>
         </listitem>
       </varlistentry>

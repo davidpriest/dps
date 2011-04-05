@@ -72,7 +72,7 @@ try {
   # write header close & write valid targetset root document
   echo "]>
 <targetset>
-  <targetsetinfo>DDS Docbook Targets</targetsetinfo>
+  <targetsetinfo>DPS Docbook Targets</targetsetinfo>
   <sitemap>" >>$VARDIR/targets/$PTYPE/olinkdb.xml
   case "$PTYPE" in
     pdf|web)
@@ -105,9 +105,9 @@ try {
 }
 catch X {
   echo ""
-  echo "##DDS>>"
+  echo "##DPS>>"
   echo $X
-  echo "<<DDS##"
+  echo "<<DPS##"
   echo ""
   [ -n "$ERR" ] && return 1 || exit
 } finally {

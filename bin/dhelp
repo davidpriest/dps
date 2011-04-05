@@ -1,4 +1,4 @@
-# DDS Help
+# DPS Help
 function usage {
   echo "davidpriest.ca Docbook Documentation System"
   echo ""

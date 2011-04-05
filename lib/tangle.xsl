@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!-- Tangle Files from Docbook-->
-<xsl:stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" id="dds-tangle">
+<xsl:stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" id="dps-tangle">
 
   <xsl:template match="/">
     <xsl:apply-templates select="//d:section[@role='literatexml']" mode="tangleroot"/>

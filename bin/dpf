@@ -48,7 +48,7 @@ try {
   xinclude "$P" > "$OUT"
   [ $? ] && throw "dpf: Inclusion failed."
   # run profile
-  XP=$<(xslt -cf "$OUT" -f "$SYSXSL/dds/lspf.xsl")
+  XP=$<(xslt -cf "$OUT" -f "$SYSXSL/dps/lspf.xsl")
   XL=<[ <library type="profiles" path="{$UPUB}" id="{$GRP}"><pub id="{$PID}" path="{$P}">{$XP}</pub></library> ]>
   
   # convert to output format
@@ -57,10 +57,10 @@ try {
   -d) 
     ;;
   -h)
-    XL=$<(xslt -i $XL -f $SYSXSL/dds/dprofile_to_human.xsl)
+    XL=$<(xslt -i $XL -f $SYSXSL/dps/dprofile_to_human.xsl)
     ;;
   -o)   
-    XL=$<(xslt -i $XL -f $SYSXSL/dds/dprofile_to_oasis.xsl)
+    XL=$<(xslt -i $XL -f $SYSXSL/dps/dprofile_to_oasis.xsl)
     ;;
   -x)
     XL=$<(xed -i $XL -d -m "//pub/@root")

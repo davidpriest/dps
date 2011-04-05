@@ -1,4 +1,4 @@
-Ca# ubiquitous
+# ubiquitous
 import commands p=posix
 declare namespace xlink=http://www.w3.org/1999/xlink
 declare namespace xi=http://www.w3.org/2001/XInclude
@@ -11,8 +11,8 @@ declare namespace db=http://docbook.org/ns/docbook
 declare namespace fn=http://www.w3.org/2005/xpath-functions
 set +indent
 
-# important dds directories and files
-#dds root directories
+# important dps directories and files
+#dps root directories
 UPUB=$HOMEDIR
 USRREV=$HOMEDIR/doc-review; [ ! -d $USRREV ] && p:mkdir -p $USRREV
 USRREL=$HOMEDIR/doc-release; [ ! -d $USRREL ] && p:mkdir -p $USRREL
@@ -35,8 +35,8 @@ USRDCAT=$USRDIR/etc/$DCATNAME
 #TODO: use catalogs!
 #[ -d $OPTDIR/docbook-5.0 ] && DB5SCH=$OPTDIR/docbook-5.0 || throw "boot: Docbook Schemas not found"
 
-# dds defaults
-GRP="dds"
+# dps defaults
+GRP="dps"
 # PROFILES must also set manually in xsl templates! AVT not allowed for template matches.
 ROOTS="article book part set reference"
 SGML_CATALOG_FILES=$SYSCAT:$USRDIR/etc/$CATNAME
@@ -47,9 +47,9 @@ DERROR=$TEMPDIR/error.txt
 clean
 
 # sanity check
-xmlsh $SBINDIR/kickstart_dds
+xmlsh $SBINDIR/kickstart_dps
 
-# dds prompt
+# dps prompt
 echo ""
 echo "David's Documentation Shell"
 echo "Copyright (C) 2011 David Priest, davidpriest.ca"

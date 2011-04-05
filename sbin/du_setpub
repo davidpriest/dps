@@ -16,15 +16,15 @@ function du_setpub {
       [ -z $FOUT ] && FOUT="$PID"
       T=$(du_mktemp "$FOUT")
     else
-      throw "dds: No such document $PID: $P"    
+      throw "dps: No such document $PID: $P"    
     fi
     [ -n "$ERR" ] && throw $ERR
   }
   catch X {
     echo ""
-    echo "##DDS>>"
+    echo "##DPS>>"
     echo $X
-    echo "<<DDS##"
+    echo "<<DPS##"
     echo ""
     [ -n "$ERR" ] && return 1 || exit
   } finally {

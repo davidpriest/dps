@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- EXCEPTIONS TO STOCK ../../../opt/docbook-xsl-ns-1.76.1 SETTINGS -->
 <!-- **NOT** output specific -->
-<!-- davidpriest.ca dds -->
+<!-- davidpriest.ca dps -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 xmlns:html="http://www.w3.org/1999/xhtml" xmlns:fo="http://www.w3.org/1999/XSL/Format"
 xmlns:d="http://docbook.org/ns/docbook" xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0"

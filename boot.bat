@@ -7,15 +7,15 @@ REM these variables may be redefined in private settings
 set XROOT=%CD:\=/%
 
 REM hfs root directories
-set BINDIR=%XROOT%/dds/bin
-set ETCDIR=%XROOT%/dds/etc
+set BINDIR=%XROOT%/dps/bin
+set ETCDIR=%XROOT%/dps/etc
 set HOMEDIR=%XROOT%/home
-set LIBDIR=%XROOT%/dds/lib
+set LIBDIR=%XROOT%/dps/lib
 set OPTDIR=%XROOT%/opt
 if not exist %OPTDIR% (
   mkdir %XROOT:/=\%\opt
 )
-set SBINDIR=%XROOT%/dds/sbin
+set SBINDIR=%XROOT%/dps/sbin
 set TEMPDIR=%XROOT%/tmp
 if not exist %TEMPDIR% (
   mkdir %XROOT:/=\%\tmp
@@ -38,7 +38,7 @@ if not exist %XMLSH% (
   echo "setenv: %XMLSH% not found. Install XMLSH. See README."
 )
 
-echo "Booting DDS"
+echo "Booting DPS"
 xmlsh -rcfile %SBINDIR%/boot
 
 exit /B

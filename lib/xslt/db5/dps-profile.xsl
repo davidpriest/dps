@@ -2,7 +2,7 @@
 <!-- davidpriest.ca -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:d="http://docbook.org/ns/docbook"
-xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0" id="dds_profile" version="1.0">
+xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0" id="dps_profile" version="1.0">
   <xsl:import href="../identity.xsl"/>
   <xsl:import href="../debug.xsl"/>
   <xsl:param name="draft.mode"/>

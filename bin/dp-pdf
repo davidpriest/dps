@@ -30,9 +30,9 @@ try {
 }
 catch X {
   echo ""
-  echo "##DDS>>"
+  echo "##DPS>>"
   echo $X
-  echo "<<DDS##"
+  echo "<<DPS##"
   echo ""
   [ -n "$ERR" ] && return 1 || exit
 } finally {
@@ -71,9 +71,9 @@ catch X {
   else
     echo "$OUT"
     echo "" 2>>$DERROR
-    echo "##DDS>>" 2>>$DERROR
+    echo "##DPS>>" 2>>$DERROR
     echo "DEBUG MODE: $OUT" 2>>$DERROR
-    echo "<<DDS##" 2>>$DERROR
+    echo "<<DPS##" 2>>$DERROR
     echo "" 2>>$DERROR
     return 0
   fi
