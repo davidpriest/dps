@@ -7,15 +7,15 @@ REM these variables may be redefined in private settings
 set XROOT=%CD:\=/%
 
 REM hfs root directories
-set BINDIR=%XROOT%/dps/bin
-set ETCDIR=%XROOT%/dps/etc
+set BINDIR=%XROOT%/opt/dps/bin
+set ETCDIR=%XROOT%/opt/dps/etc
 set HOMEDIR=%XROOT%/home
-set LIBDIR=%XROOT%/dps/lib
+set LIBDIR=%XROOT%/opt/dps/lib
 set OPTDIR=%XROOT%/opt
 if not exist %OPTDIR% (
   mkdir %XROOT:/=\%\opt
 )
-set SBINDIR=%XROOT%/dps/sbin
+set SBINDIR=%XROOT%/opt/dps/sbin
 set TEMPDIR=%XROOT%/tmp
 if not exist %TEMPDIR% (
   mkdir %XROOT:/=\%\tmp

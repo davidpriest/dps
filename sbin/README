@@ -5,22 +5,22 @@ davidpriest.ca Documentation System (DPS)
 setenv      unixy environment. Use ". setenv" at command line prompt.
 boot.bat    windows environment. Use "boot.bat" at command line prompt.
 
-[root]/dps
+[root]/opt/dps
   David's Documentation System
   a bash-like environment for publication production and management.
   "backed up monthly"
 
-  [root]/dps/bin
+  [root]/opt/dps/bin
     DPS commands and pipelines (used by DPS XMLSH workflows)
     contains commands used by sysadmin and users. May also contain commands 
     which are used indirectly by scripts.
 
-  [root]/dps/etc
+  [root]/opt/dps/etc
     DPS configuration files (used by DPS XMLSH workflows)
     contains configuration files: local file used to control the operation of 
     programs; static, non-executable. 
 
-  [root]/dps/lib    
+  [root]/opt/dps/lib    
     DPS libraries (used by DPS XMLSH workflows)
     contains those shared library images needed to boot the system and run the
     commands in the root filesystem (/bin, /sbin) "backed up weekly"
@@ -29,7 +29,7 @@ boot.bat    windows environment. Use "boot.bat" at command line prompt.
         /xquery
         /xmlsh?
 
-  [root]/dps/sbin   
+  [root]/opt/dps/sbin   
     Sys Admin Utilities
     Root-only commands are stored in /sbin, /usr/sbin, and /usr/local/sbin. 
     /sbin contains binaries essential for booting, restoring, recovering, and/or repairing the
