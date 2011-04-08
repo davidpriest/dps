@@ -1,1 +1,0 @@
-opt/dps/boot.sh
