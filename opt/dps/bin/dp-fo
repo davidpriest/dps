@@ -10,11 +10,13 @@ try {
   
   if [ "$DEST" != "pipe" ] ; then
     # make a single, profiled DB5 document
-    [ -e $P ] && IN=$(dp-db5 $P1 $P2 $P3 --tmp $P $PF) || throw "dp-fo: No such source document $P"
+    IN=$(dp-db5 $P1 $P2 $P3 --tmp $P $PF)
+    [ ! -f "$IN" ] && throw "dp-db5: DB5 transformation failed"
   else
     # use existing DB5 document
-    [ -e $P ] && IN=$P || throw "dp-fo: No such compiled document $P"
+    [ -f "$P" ] && IN=$P || throw "dp-fo: No such compiled document $P"
   fi
+  
   # post-profiling, there is only one filename
   FOUT=$(xpath -cf $IN "/*/*:info//*:filename[@role='filename']/string()") 2>>$DERROR
   [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")

@@ -2,7 +2,6 @@
 function usage {
   echo "Publish XML:FO Document"
   echo "dp-pdf $DUSETOPTS"
-  echo ""
 }
 
 try {
@@ -11,11 +10,13 @@ try {
 
   if [ "$DEST" != "pipe" ] ; then
     # make a single, profiled XML:FO document
-    [ -e $P ] && IN=$(dp-fo $P1 $P2 $P3 --tmp $P $PF) || throw "dp-pdf: No such source document $P"
+    IN=$(dp-fo $P1 $P2 $P3 --tmp $P $PF)
+    [ ! -f "$IN" ] && throw "dp-pdf: FO transformation failed."
   else
     # use existing XML:FO document
-    [ -e $P ] && IN=$P || throw "dp-pdf: No such compiled document $P"  
+    [ -f "$P" ] && IN=$P || throw "dp-pdf: No such compiled document $P"  
   fi
+
   # dp-fo transformation puts destination filename into @role
   FOUT=$(xpath -cf $IN "string(/*/@role/string())")
   [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")

@@ -5,17 +5,18 @@ function usage {
 }
 
 try {
-  unset P PF ERR
   du_setopt_dp $@
   du_setpub
   
   if [ "$DEST" != "pipe" ] ; then
     # make a single, profiled XML:FO document
-    [ -e $P ] && IN=$(dp-db5 $P1 $P2 $P3 --tmp $P $PF) || throw "dp-chm: No such source document $P"
+    IN=$(dp-db5 $P1 $P2 $P3 --tmp $P $PF)
+    [ ! -f "$IN" ] && throw "dp-db5: DB5 transformation failed"
   else
     # use existing XML:FO document
-    [ -e $P ] && IN=$P || throw "dp-chm: No such compiled document $P"  
+    [ -f "$P" ] && IN=$P || throw "dp-chm: No such compiled document $P"  
   fi
+  
   # post-profiling, there is only one filename
   FOUT=$(xpath -cf $IN "string(/*/*:info//*:filename[@role='filename']/string())")
   [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")

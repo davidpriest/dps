@@ -1,10 +1,14 @@
 #ignore
+home
 opt
 tmp
-TODO
+usr
 var
+TODO
 \.setenv
 \.hg*
 \.svn*
 usr/etc/xep.config.xml
 usr/etc/config.properties
+!home/doc-source/dps_ug.xml
+!opt/dps/*
