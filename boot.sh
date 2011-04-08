@@ -22,6 +22,7 @@ popd  > /dev/null
 export DPSDIR=$SCRIPT_PATH
 
 #hfs root directories
+<<<<<<< HEAD
 export HOMEDIR=$PWD/home
 export OPTDIR=$PWD/opt ; [ ! -e $OPTDIR ] && mkdir $OPTDIR
 export TEMPDIR=$PWD/tmp ; [ ! -e $TEMPDIR ] && mkdir $TEMPDIR
@@ -32,6 +33,17 @@ export BINDIR=$DPSDIR/bin
 export ETCDIR=$DPSDIR/etc
 export LIBDIR=$DPSDIR/lib
 export SBINDIR=$DPSDIR/sbin
+=======
+export BINDIR=$XROOT/opt/dps/bin
+export ETCDIR=$XROOT/opt/dps/etc
+export HOMEDIR=$XROOT/home
+export LIBDIR=$XROOT/opt/dps/lib
+export OPTDIR=$XROOT/opt ; [ ! -e $OPTDIR ] && mkdir $OPTDIR
+export SBINDIR=$XROOT/opt/dps/sbin
+export TEMPDIR=$XROOT/tmp ; [ ! -e $TEMPDIR ] && mkdir $TEMPDIR
+export USRDIR=$XROOT/usr
+export VARDIR=$XROOT/var ; [ ! -e $VARDIR ] && mkdir -p $VARDIR/log
+>>>>>>> 3558b9fcb3edaa5e94abd89bbc97117312157395
 
 # XMLSH settings
 export XMLSH=$OPTDIR/xmlsh_1_1_4
