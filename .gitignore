@@ -1,7 +1,5 @@
 #ignore
-dps
 opt
-root
 tmp
 TODO
 var
@@ -9,3 +7,4 @@ var
 \.hg*
 \.svn*
 usr/etc/xep.config.xml
+usr/etc/config.properties

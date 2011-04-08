@@ -1,26 +1,43 @@
 #!/bin/bash
-# prepares host system environment for XMLSH
-# see also /bin/boot, which prepares the XMLSH environment
+# prepares host shell environment for XMLSH
+# see also sbin/boot, which prepares the XMLSH environment
+# see also sbin/kickstart, which installs required packages
 #
-# these variables may be redefined in private settings
-export XROOT=$PWD
+
+#"SCRIPT_PATH"
+#Copyleft, selectable license under the GPL2.0 or later or CC-SA 3.0 (CreativeCommons Share Alike) or later.
+#http://www.gnu.org/licenses/gpl-2.0.txt
+#http://creativecommons.org/licenses/by-sa/3.0/
+#18eedfe1c99df68dc94d4a94712a71aaa8e1e9e36cacf421b9463dd2bbaa02906d0d6656
+SCRIPT_PATH="${BASH_SOURCE[0]}";
+if([ -h "${SCRIPT_PATH}" ]) then
+  while([ -h "${SCRIPT_PATH}" ]) do SCRIPT_PATH=`readlink "${SCRIPT_PATH}"`; done
+fi
+pushd . > /dev/null
+cd `dirname ${SCRIPT_PATH}` > /dev/null
+SCRIPT_PATH=`pwd`;
+popd  > /dev/null
+#"SCRIPT_PATH"
+
+export DPSDIR=$SCRIPT_PATH
 
 #hfs root directories
-export BINDIR=$XROOT/opt/dps/bin
-export ETCDIR=$XROOT/opt/dps/etc
-export HOMEDIR=$XROOT/home
-export LIBDIR=$XROOT/opt/dps/lib
-export OPTDIR=$XROOT/opt ; [ ! -e $OPTDIR ] && mkdir $OPTDIR
-export SBINDIR=$XROOT/opt/dps/sbin
-export TEMPDIR=$XROOT/tmp ; [ ! -e $TEMPDIR ] && mkdir $TEMPDIR
-export USRDIR=$XROOT/usr
-export VARDIR=$XROOT/var ; [ ! -e $VARDIR ] && mkdir -p $VARDIR/log
+export HOMEDIR=$PWD/home
+export OPTDIR=$PWD/opt ; [ ! -e $OPTDIR ] && mkdir $OPTDIR
+export TEMPDIR=$PWD/tmp ; [ ! -e $TEMPDIR ] && mkdir $TEMPDIR
+export USRDIR=$PWD/usr
+export VARDIR=$PWD/var ; [ ! -e $VARDIR ] && mkdir -p $VARDIR/log
+#hfs dps directories
+export BINDIR=$DPSDIR/bin
+export ETCDIR=$DPSDIR/etc
+export LIBDIR=$DPSDIR/lib
+export SBINDIR=$DPSDIR/sbin
 
 # XMLSH settings
 export XMLSH=$OPTDIR/xmlsh_1_1_4
 export PATH=$XMLSH/unix:$PATH
-export XPATH=$XROOT/usr/bin:$SBINDIR:$BINDIR
-export XLOGFILE=$XROOT/var/log/xmlsh.log
+export XPATH=$PWD/usr/bin:$SBINDIR:$BINDIR
+export XLOGFILE=$PWD/var/log/xmlsh.log
 
 # at a minimum, XMLSH required
 [ ! -e $XMLSH ] && { 
