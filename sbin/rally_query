@@ -21,9 +21,9 @@ try {
 }
 catch X {
   echo ""
-  echo "##DPS>>"
+  echo "##DDS>>"
   echo $X
-  echo "<<DPS##"
+  echo "<<DDS##"
   echo ""
   return 1
 } finally {

@@ -1,5 +1,5 @@
 #ignore
-home
+home/*
 opt
 tmp
 usr
@@ -8,6 +8,5 @@ TODO
 \.setenv
 \.hg*
 \.svn*
-!home/doc-source/dps_ug.xml
-!usr/etc/config.properties.example
+!home/dps_ug.xml
 
