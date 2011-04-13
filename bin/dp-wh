@@ -1,0 +1,108 @@
+# Publish WebHelp HTML
+function usage {
+  echo "Publish WebHelp HTML Document"
+  echo "dp-wh $DUSETOPTS"
+}
+
+try {
+  du_setopt_dp $@
+  du_setpub
+  
+  if [ "$DEST" != "pipe" ] ; then
+    # make a single, profiled DB5 document
+    IN=$(dp-db5 $P1 $P2 $P3 --tmp $P $PF)
+    [ ! -f "$IN" ] && throw "dp-db5: DB5 transformation failed"
+  else
+    # use existing DB5 document
+    [ -f "$P" ] && IN=$P || throw "dp-wh: No such compiled document $P"
+  fi
+  
+  # post-profiling, there is only one filename
+  FOUT=$(xpath -cf $IN "string(/*/*:info//*:filename[@role='filename']/string())")
+  [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")
+
+  # construct a style file reference
+  XSL=$(xpath -cf $IN "string(/*/*:info//*:filename[@role='style'])")
+  [ -e "$USRXSL/webhelp/$XSL/$ROOT.xsl" ] && XSL="$USRXSL/webhelp/$XSL/$ROOT.xsl" || XSL="$SYSXSL/webhelp/$ROOT.xsl"
+  [ ! -e "$XSL" ] && XSL="$SYSXSL/webhelp/nwalsh.xsl"
+  SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
+  OUT=$T"_21.$SID"
+  p:mkdir $OUT
+  # build classpath
+  #TODO: build classpath containing only required jars
+  for C in $(xls $XMLSH/lib | xpath "//file[contains(@path,\".jar\")]/@path/string()") ; do
+    [ $OS ] && {
+      C=$(xfile -s "$C")
+      CP="$C;$CP"
+    } || CP=$C:$CP
+  done
+  for C in $(xls $OPTDIR/xalan-j_2_7_1 | xpath "//file[contains(@path,\".jar\")]/@path/string()") ; do
+    [ $OS ] && {
+      C=$(xfile -s "$C");CP="$C;$CP"
+    } || CP=$C:$CP
+  done
+  for C in $(xls $XSLFO/extensions | xpath "//file[contains(@path,\".jar\") and not(contains(@path,\"webhelpindexer.jar\"))]/@path/string()") ; do
+    [ $OS ] && { 
+      C=$(xfile -s "$C")
+      CP="$C;$CP" 
+    } || CP=$C:$CP
+  done
+  for C in $(xls $LIBDIR/java | xpath "//file[contains(@path,\".jar\")]/@path/string()") ; do
+    [ $OS ] && { 
+      C=$(xfile -s "$C")
+      CP="$C;$CP" 
+    } || CP=$C:$CP
+  done
+  # collate image references
+  IMG=$(xpath -cf $IN "//*:imagedata/@fileref/string()")
+  for I in $IMG ; do
+    IMGD=$(xfile -d $I)
+    IMGN=$(xfile -n $I)
+    [ ! -e "$OUT/content/$IMGD/" ] && p:mkdir "$OUT/content/$IMGD/"
+    p:cp -r -f "$BASE/"$I "$OUT/content/$IMGD/$IMGN" 2>>$DERROR
+  done
+  # transform DB5 to WebHelp
+  # expand vars before sending to cmdline (DOS doesn't understand $VAR)
+  CMD=$(echo java -cp \"$CP\" com.icl.saxon.StyleSheet "$IN" "$XSL" "webhelp.base.dir=$OUT" "target.database.document=$VARDIR/targets/webhelp/olinkdb.xml" )
+  eval $CMD 2>>$DERROR >$DERROR
+  [ $? ] && throw "dp-wh: HTML conversion failed."
+  
+  # index
+  CMD=$(echo java -cp \"$CP\" com.nexwave.nquindexer.IndexerMain "$OUT/content" en)
+  eval $CMD 2>>$DERROR >$DERROR
+  
+  #copy webhelp support files
+  p:cp -r "$XSLFO/webhelp/template/common" "$OUT/common/" 2>>$DERROR
+  p:cp -r "$XSLFO/webhelp/template/content" "$OUT/" 2>>$DERROR
+  # copy docbook images (#TODO: only those w/correct extension)
+  p:cp -r -f "$XSLFO/images" "$OUT/common/" 2>>$DERROR
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DPS>>"
+  echo $X
+  echo "<<DPS##"
+  echo ""
+  [ -n "$ERR" ] && return 1 || exit
+} finally {
+  if [ "$DEST" = "tmp" -o "$DEST" = "pipe" ] ; then
+    echo "$OUT"
+    return 0
+  elif [ "$DEBUG" = "false" ] ; then
+    [ "$DEST" = "rel" ] && D=$USRREL || D=$USRREV
+    OD="$FOUT-webhelp/"
+    p:rm -r -f "$D/$OD"
+    p:cp -r -f "$OUT" "$D/$OD"
+    echo "$D/$OD/content/index.html"
+    clean
+    return 0
+  else
+    echo ""
+    echo "##DPS>>"
+    echo "DEBUG MODE: $OUT"
+    echo "<<DPS##"
+    echo ""
+    return 0
+  fi
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <!-- System-wide DTD and stylesheet files installed under /etc -->
+  <group xml:base=".">
+    <rewriteSystem systemIdStartString="http://docbook.org/ns/docbook" rewritePrefix="docbook5/"/>
+    <rewriteSystem systemIdStartString="http://www.w3.org/1999/xlink" rewritePrefix="docbook5/"/>
+    <rewriteSystem systemIdStartString="http://www.w3.org/2001/XMLSchema" rewritePrefix="docbook5/"/>
+    <rewriteURI uriStartString="http://docbook.sourceforge.net/release/xsl/current/" rewritePrefix="docbook-xsl-ns-1.76.1/"/>
+    <!-- To resolve short stylesheet references -->
+    <uri name="fo-docbook.xsl" uri="docbook-xsl-ns-1.76.1/fo/docbook.xsl"/>
+    <uri name="html-docbook.xsl" uri="docbook-xsl-ns-1.76.1/html/docbook.xsl"/>
+    <uri name="html-chunk.xsl" uri="docbook-xsl-ns-1.76.1/html/chunk.xsl"/>
+  </group>
+  <!-- Resolve DTD PUBLIC identifiers -->
+  <nextCatalog catalog="../opt/docbook-5.0/catalog.xml"/>
+  <nextCatalog catalog="../opt/docbook-xsl-ns-1.76.1/catalog.xml"/>
+  <nextCatalog catalog="../usr/etc/catalog.xml"/>
+</catalog>

@@ -1,0 +1,58 @@
+DUSETOPTS=<{{[--rel|--rev|--pipe|--tmp] pubid [profile [profile]]
+  --pipe    : skip default pipeline; pubid is path to previous pipeline output
+  --rev     : move to review directory
+  --rel     : move to release directory
+  --tmp     : leave in temp dir; use default pipeline"
+  pubid     : the publication ID
+  profile   : enable profile(s)"
+Returns path to published document.
+}}>
+#  echo "  -d|--debug   : enable 'debug' in transformations"
+#  echo "  --draft      : enable 'draft' in transformations"
+#  echo "  --purple     : enable 'purple numbers' in transformations"
+
+function du_setopt_dp {
+  DEST="tmp"
+  DRAFT="no"
+  DEBUG="false"
+  unset PURPLE
+  unset P1 P2 P3 PF P
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -d|--debug)
+        DEBUG="true";  P1="--debug"
+        ;;
+      --draft)
+        DRAFT="yes";  P2="--draft"
+        ;;
+      --purple)
+        PURPLE="true";  P3="--purple"
+        ;;
+      --rev)
+        DEST="rev"
+        DRAFT="yes";  P2="--draft"
+        PURPLE="true"; P3="--purple"
+        ;;
+      --rel)
+        DEST="rel"
+        DRAFT="no"
+        DEBUG="false"
+        PURPLE="false"
+        unset P1 P2 P3
+        ;;
+      --tmp)
+        DEST="tmp"
+        ;;
+      --pipe)
+        DEST="pipe"
+        ;;
+      -?|-h|--help)
+        usage; exit
+        ;;
+      *)
+        [ -n "$P" ] && PF=$PF"$1;" || P=$1
+        ;;
+    esac
+    shift
+  done
+}

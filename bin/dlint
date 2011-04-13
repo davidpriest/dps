@@ -1,0 +1,55 @@
+# "Lint" for Docbook
+function usage {
+  echo "Display Important Docbook Information"
+  echo "dlint pubid|path"
+  #  echo "dlint [-l|--library libdir] pubid|path"
+  #  echo "  -l        : look in this library directory"
+  #  echo "  libdir    : '$UPUB'"
+  echo "  pubid     : the unique xml:id of a publication"
+  echo "  path      : the absolute path of the publication"
+  echo "Returns a table of results."
+} ;
+
+unset P
+unset PID
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -l)               
+      shift; [ -n "$1" ] && UPUB=$1
+      ;;
+    -?|-h|--help)
+      usage; exit
+      ;;
+    *)
+      P=$1 
+      ;;
+  esac
+  shift
+done
+
+try {
+  du_setpub
+ 
+  # inclusions
+  OUT=$T".lint.xml"
+  xinclude "$P" > "$OUT"
+  [ $? ] && throw "dp-lint: Inclusion failed."
+  # xpath
+  echo ":::DXLINT:::"
+  echo "Trademarks"
+  for E in $<(xpath -cf $OUT "//db:trademark") ; do
+    echo "  " $(xpath -i $E "text()")
+  done
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DPS>>"
+  echo $X
+  echo "<<DPS##"
+  echo ""
+  return 1
+} finally {
+  rm -r -f $OUT
+  return 0
+}

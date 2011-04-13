@@ -1,0 +1,3 @@
+import commands experimental
+
+httpserver -port 8080 -get 'dget $@' -put 'dput $@' -post 'dpost $@' start

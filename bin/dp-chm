@@ -1,0 +1,94 @@
+# Publish Microsoft CHM
+function usage {
+  echo "Publish Microsoft CHM Document"
+  echo "dp-chm $DUSETOPTS"
+}
+
+try {
+  du_setopt_dp $@
+  du_setpub
+  
+  if [ "$DEST" != "pipe" ] ; then
+    # make a single, profiled XML:FO document
+    IN=$(dp-db5 $P1 $P2 $P3 --tmp $P $PF)
+    [ ! -f "$IN" ] && throw "dp-db5: DB5 transformation failed"
+  else
+    # use existing XML:FO document
+    [ -f "$P" ] && IN=$P || throw "dp-chm: No such compiled document $P"  
+  fi
+  
+  # post-profiling, there is only one filename
+  FOUT=$(xpath -cf $IN "string(/*/*:info//*:filename[@role='filename']/string())")
+  [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")
+  
+  # construct a style file reference
+  XSL=$(xpath -cf $IN "string(/*/*:info//*:filename[@role='style'])")
+  [ -e "$USRXSL/chm/$XSL/$ROOT.xsl" ] && XSL="$USRXSL/chm/$XSL/$ROOT.xsl" || XSL="$SYSXSL/chm/$ROOT.xsl"
+  [ ! -e "$XSL" ] && XSL="$SYSXSL/chm/nwalsh.xsl"
+  SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
+  OUT=$T"_21.chm.$SID"
+  p:mkdir $OUT
+  # build classpath
+  #TODO: build classpath containing only required jars
+  for C in $(xls $XMLSH/lib | xpath "//file[contains(@path,\".jar\")]/@path/string()") ; do
+    [ $OS ] && {
+      C=$(xfile -s "$C")
+      CP="$C;$CP"
+    } || CP=$C:$CP
+  done
+  for C in $(xls $OPTDIR/xalan-j_2_7_1 | xpath "//file[contains(@path,\".jar\")]/@path/string()") ; do
+    [ $OS ] && {
+      C=$(xfile -s "$C")
+      CP="$C;$CP"
+    } || CP=$C:$CP
+  done
+  for C in $(xls $XSLFO/extensions | xpath "//file[contains(@path,\".jar\")]/@path/string()") ; do
+    [ $OS ] && {
+      C=$(xfile -s "$C")
+      CP="$C;$CP"
+    } || CP=$C:$CP
+  done
+  # collate image references
+  IMG=$(xpath -cf $IN "//*:imagedata/@fileref/string()")
+  for I in $IMG ; do
+    IMGD=$(xfile -d $I)
+    IMGN=$(xfile -n $I)
+    [ ! -e "$OUT/dummy/$IMGD/" ] && p:mkdir "$OUT/dummy/$IMGD/"
+    p:cp -r -f "$BASE/"$I "$OUT/dummy/$IMGD/$IMGN"  2>>$DERROR
+  done
+  # transform DB5 to CHM
+  # expand vars before sending to cmdline (DOS doesn't understand $VAR)
+  CMD=$(echo java -cp \"$CP\" -Dencoding.windows-1252=com.nwalsh.saxon.Windows1252 -Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl com.icl.saxon.StyleSheet "$IN" "$XSL" "htmlhelp.encoding=windows-1252" "chunker.output.encoding=windows-1252" "saxon.character.representation=native" "db5.path=$XSLFO" "base.dir=$OUT/" "target.database.document=\"$VARDIR/targets/chm/olinkdb.xml\"")
+  eval $CMD 2>>$DERROR >$DERROR
+  [ $? ] && throw "dp-chm: CHM conversion failed."
+  p:rm -r -f "$OUT/dummy" 2>>$DERROR
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DPS>>"
+  echo $X
+  echo "<<DPS##"
+  echo ""
+  [ -n "$ERR" ] && return 1 || exit
+} finally {
+  if [ "$DEST" = "tmp" -o "$DEST" = "pipe" ] ; then
+    echo "$OUT"
+    return 0
+  elif [ "$DEBUG" = "false" ] ; then
+    [ "$DEST" = "rel" ] && D=$USRREL || D=$USRREV
+    OD="$FOUT-chm"
+    p:rm -r -f "$D/$OD"
+    p:cp -r "$OUT" "$D/$OD"
+    echo "$D/$OD"
+    clean
+    return 0
+  else
+    echo ""
+    echo "##DPS>>"
+    echo "DEBUG MODE: $OUT"
+    echo "<<DPS##"
+    echo ""
+    return 0
+  fi
+}

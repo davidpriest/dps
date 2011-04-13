@@ -1,0 +1,82 @@
+# List all the profile information in the library
+function usage {
+  echo "Display Profiling Information"
+  echo "dpf [-d|h|x] [-r|--roots 'element [element]'] [pubid|path]" 
+  #  echo "dpf [-d|h|x] [-l|--library libdir] [-r|--roots 'element [element]'] [pubid|path]" #TODO: multiple pubids? Or better to use sets instead?
+  echo "  -dhx      : output detailed, human*, XMLSH"
+#  echo "  -l        : look in this library directory"
+#  echo "  libdir    : '$UPUB'"
+  echo "  -r        : limited to publications with the following document root elements"
+  echo "  elements  : '$ROOTS'"
+#  echo "  pubid     : the unique xml:id of a publication"
+#  echo "  path      : the absolute path of the publication"
+  echo "Lists all the profiling values that have been used. Returns 0 on success."
+  echo "@arch|@audience|@conformance|@os|@revision|@revisionflag|@security|@status|@userlevel|@vendor|@xml:lang"
+} ;
+
+unset P
+unset PID
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -d|-h|-x)   
+      OPT=$1
+      ;;
+    -l)               
+      shift; [ -n "$1" ] && UPUB=$1
+      ;;
+    -r|--roots)
+      shift; [ -n "$1" ] && ROOTS=$1
+      ;;
+    -?|-h|--help)
+      usage; exit
+      ;;
+    *)
+      [ -n "$1" ] && P=$1 # last pub wins
+      ;;
+  esac
+  shift
+done
+
+# defaults
+[ ! -n "$OPT" ] && OPT="-h"
+#[ -f $USRDIR/etc/pdict.xml ] && PDICT=$USRDIR/etc/pdict.xml || PDICT=$ETCDIR/pdict.xml
+
+try {
+  du_setpub
+  # inclusions
+  OUT=$T".profile.xml"
+  xinclude "$P" > "$OUT"
+  [ $? ] && throw "dpf: Inclusion failed."
+  # run profile
+  XP=$<(xslt -cf "$OUT" -f "$SYSXSL/dps/lspf.xsl")
+  XL=<[ <library type="profiles" path="{$UPUB}" id="{$GRP}"><pub id="{$PID}" path="{$P}">{$XP}</pub></library> ]>
+  
+  # convert to output format
+  case "$OPT" in
+  # (leaf to root tree order makes it easier; so trunk -rens don't affect leafier -rens)
+  -d) 
+    ;;
+  -h)
+    XL=$<(xslt -i $XL -f $SYSXSL/dps/dprofile_to_human.xsl)
+    ;;
+  -o)   
+    XL=$<(xslt -i $XL -f $SYSXSL/dps/dprofile_to_oasis.xsl)
+    ;;
+  -x)
+    XL=$<(xed -i $XL -d -m "//pub/@root")
+    XL=$<(xed -i $XL -ren "name" -m "//pub/@id")
+    XL=$<(xed -i $XL -ren "file" -m "//pub")
+    XL=$<(xed -i $XL -d -m "/*/@*")
+    XL=$<(xed -i $XL -ren "dir" -m "/*") 
+    ;;
+  esac
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo $X
+  exit 1
+} finally {
+  echo $XL
+  rm $OUT
+  return 0
+}

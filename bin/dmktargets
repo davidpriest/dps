@@ -1,0 +1,115 @@
+# Generate OLinks for a document (and all documents it references)
+function usage {
+  echo "Generate OLinks Targets"
+  echo "dmktargets [pdf|web|chm]"
+  echo "  pdf|web|chm : PDF edition, web edition, or CHM edition"
+  echo "Returns 0 on success."
+} ;
+
+unset PTYPE
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -?|-h|--help)
+      usage; exit
+      ;;
+      pdf)
+        PTYPE=$1; ROOTXSL="fo"
+        ;;
+      web)
+        PTYPE=$1; ROOTXSL="webhelp"
+        ;;
+      chm)
+        PTYPE=$1; ROOTXSL="chm"
+        ;;
+  esac
+  shift
+done
+
+
+try {
+  [ -z $PTYPE ] && throw "dmktargets: output type (pdf, web, chm) not specified."
+
+  PUBS=$<(dls -d | xpath "//pub/fn:replace(@path,\"file://\",\"\")")
+
+  #TODO: make targets only for root pubs or xi:included files with newer mod time
+  for P in $PUBS; do
+    du_setpub
+    # inclusions
+    OUT=$T".xml"
+    xinclude "$P" > "$OUT"
+    [ $? ] && throw "dmktargets: Inclusion failed."
+
+    # create a targets file for a root document
+    IN=$OUT
+    XSL=$(xpath -cf $P "string(/*/db:info//db:filename[@role='style'])")
+    [ -e "$USRXSL/$ROOTXSL/$XSL/$ROOT.xsl" ] && XSL="$USRXSL/$ROOTXSL/$XSL/$ROOT.xsl" || XSL="$SYSXSL/$ROOTXSL/$ROOT.xsl"
+    [ ! -e "$XSL" ] && XSL="$SYSXSL/$ROOTXSL/nwalsh.xsl"
+    p:mkdir $VARDIR/targets/$PTYPE 2>>$DERROR
+    xslt1 -f "$XSL" -i "$IN" -v collect.xref.targets "only" targets.filename "$VARDIR/targets/$PTYPE/$PID.db" >>$DERROR 2>>$DERROR
+    [ $? ] && ERR="dmktargets: Target collection for $P failed."
+    p:rm -f $OUT >>$DERROR 2>>$DERROR
+  done
+  # write header open
+  echo "<?xml version=\"1.0\" standalone=\"yes\"?>
+<!DOCTYPE targetset SYSTEM \"file://$XSLFO/common/targetdatabase.dtd\" [" >$VARDIR/targets/$PTYPE/olinkdb.xml
+  # write entities
+  for P in $PUBS; do
+    du_setpub
+    # write entities
+    PDIR=$(xfile -u $BASE)
+    case "$PTYPE" in
+      pdf)
+        echo "<!ENTITY $PID SYSTEM \"$VARDIR/targets/$PTYPE/$PID.db\">" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+        ;;
+      web)
+        echo "<!ENTITY $PID SYSTEM \"$VARDIR/targets/$PTYPE/$PID.db\">" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+        ;;
+      chm)
+        echo "<!ENTITY $PID SYSTEM \"$VARDIR/targets/$PTYPE/$PID.db\">" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+        ;;
+    esac
+  done
+  # write header close & write valid targetset root document
+  echo "]>
+<targetset>
+  <targetsetinfo>DPS Docbook Targets</targetsetinfo>
+  <sitemap>" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+  case "$PTYPE" in
+    pdf|web)
+      echo "    <dir name=\"$USRREL\">" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+      ;;
+    chm)
+      echo "    <dir name=\"$USRREL/$FOUT-chm/\">" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+      ;;
+  esac
+
+  #wrangle olink database: insert refs to files
+  for P in $PUBS; do
+    du_setpub
+    case "$PTYPE" in
+      pdf)
+        echo "      <document targetdoc=\"$PID\" baseuri=\"file:$FOUT.pdf\">&$PID;</document>" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+        ;;
+      web)
+        echo "      <document targetdoc=\"$PID\" baseuri=\"$FOUT-webhelp/content/\">&$PID;</document>" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+        ;;
+      chm)
+        echo "      <document targetdoc=\"$PID\">&$PID;</document>" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+        ;;
+    esac
+  done
+  echo "    </dir>
+  </sitemap>
+</targetset>" >>$VARDIR/targets/$PTYPE/olinkdb.xml
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DPS>>"
+  echo $X
+  echo "<<DPS##"
+  echo ""
+  [ -n "$ERR" ] && return 1 || exit
+} finally {
+  return 0
+}  

@@ -1,0 +1,48 @@
+# "Lint" for Docbook
+function usage {
+  echo "Edit Docbook Publication"
+  echo "ded pubid|path"
+  #  echo "ded [-l|--library libdir] pubid|path"
+  #  echo "  -l        : look in this library directory"
+  #  echo "  libdir    : '$UPUB'"
+  echo "  pubid     : the unique xml:id of a publication"
+  echo "  path      : the absolute path of the publication"
+  echo "Returns a table of results."
+} ;
+
+unset P
+unset PID
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -l)               
+      shift; [ -n "$1" ] && UPUB=$1
+      ;;
+    -?|-h|--help)
+      usage; exit
+      ;;
+    *)
+      P=$1 
+      ;;
+  esac
+  shift
+done
+
+try {
+  du_setpub
+  
+  ED=$(xproperties -in $ETCDIR/config.properties -v xmleditcmd)
+  CMD=$(echo $ED $P)
+  eval $CMD &
+  
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DPS>>"
+  echo $X
+  echo "<<DPS##"
+  echo ""
+  return 1
+} finally {
+  return 0
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:db="http://docbook.org/ns/docbook" version="5.0">
+  <title>Draft Notes</title>
+  <formalpara xml:id="draftnote">
+    <title>Draft Markup</title>
+    <para>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>Blue Tint: Changed text.</para>
+        </listitem>
+        <listitem>
+          <para>Green Tint, underlined: Added text.</para>
+        </listitem>
+        <listitem>
+          <para>Grey Tint, midlined: Changed text.</para>
+        </listitem>
+        <listitem>
+          <para>Purple number: Repo ID + Chunk ID</para>
+        </listitem>
+        <listitem>
+          <para>AUD/VND/REV/etc: chunk inclusion params</para>
+        </listitem>
+      </itemizedlist>
+    </para>
+  </formalpara>
+</section>

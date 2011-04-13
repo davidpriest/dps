@@ -1,0 +1,12 @@
+#ignore
+home/*
+opt
+tmp
+usr
+var
+TODO
+\.setenv
+\.hg*
+\.svn*
+!home/dps_ug.xml
+

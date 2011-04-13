@@ -1,0 +1,47 @@
+function du_setpub {
+  # Given [pid|path], return various standard values
+  try {
+    if [ -e $P ] ; then
+      PID=$(dwhichis $P)
+    else
+      PID=$P
+      P=$(dwhereis $PID)
+    fi
+
+    if [ -e $P ] ; then 
+      BASE=$(xfile -d $P)
+      [ $? ] && throw "du_setpub: BASE error."
+      ROOT=$(xpath -cf $P "string(/*/local-name())")
+      [ $? ] && throw "du_setpub: ROOT error."
+      [ -z $FOUT ] && FOUT="$PID"
+      T=$(du_mktemp "$FOUT")
+    else
+      throw "dps: No such document $PID: $P"    
+    fi
+    [ -n "$ERR" ] && throw $ERR
+  }
+  catch X {
+    echo ""
+    echo "##DPS>>"
+    echo $X
+    echo "<<DPS##"
+    echo ""
+    [ -n "$ERR" ] && return 1 || exit
+  } finally {
+    return 0
+  }
+}
+
+function du_mktemp {
+  # return a unique base temporary filename
+  B=$(xfile -b $1)
+  E=$(xfile -e $1)
+  D=$<(xls $TEMPDIR)
+  PT=$B
+  while [ $(xpath -b -i $D "//file[contains(@name,\"$PT\")]"; echo $?) = 0 ] ; do
+    R=$RANDOM
+    PT=$B$R
+  done
+  echo "$TEMPDIR/$PT$E"
+}
+

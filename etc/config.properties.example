@@ -1,0 +1,6 @@
+#Fri Feb 11 14:54:49 PST 2011
+repo.type=git
+rally.uri=https://rally1.rallydev.com/slm/webservice/1.19
+rally.username=username@example.com
+rally.password=mypassword
+rally.product=Product

@@ -1,0 +1,62 @@
+# Publish XML:FO
+function usage {
+  echo "Publish XML:FO Document"
+  echo "dp-fo $DUSETOPTS"
+}
+
+try {
+  du_setopt_dp $@
+  du_setpub
+  
+  if [ "$DEST" != "pipe" ] ; then
+    # make a single, profiled DB5 document
+    IN=$(dp-db5 $P1 $P2 $P3 --tmp $P $PF)
+    [ ! -f "$IN" ] && throw "dp-db5: DB5 transformation failed"
+  else
+    # use existing DB5 document
+    [ -f "$P" ] && IN=$P || throw "dp-fo: No such compiled document $P"
+  fi
+  
+  # post-profiling, there is only one filename
+  FOUT=$(xpath -cf $IN "/*/*:info//*:filename[@role='filename']/string()") 2>>$DERROR
+  [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")
+
+  # transform DB5 to XML:FO
+  # construct a style file reference
+  XSL=$(xpath -cf $P "string(/*/*:info//*:filename[@role='style'])")
+  [ -e "$USRXSL/fo/$XSL/$ROOT.xsl" ] && XSL="$USRXSL/fo/$XSL/$ROOT.xsl" || XSL="$SYSXSL/fo/$ROOT.xsl"
+  [ ! -e "$XSL" ] && XSL="$SYSXSL/fo/nwalsh.xsl"
+  SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
+  OUT=$T"_21.$SID.fo.xml"
+  echo "FO: xslt -f \"$XSL\" -v target.database.document \"$VARDIR/targets/pdf/olinkdb.xml\" db5.path \"$XSLFO\" img.src.path \"$BASE/\" debug.mode \"$DEBUG\" draft.mode \"$DRAFT\" < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
+  xslt -f "$XSL" -v target.database.document "$VARDIR/targets/pdf/olinkdb.xml" db5.path "$XSLFO" img.src.path "$BASE/" debug.mode "$DEBUG" draft.mode "$DRAFT" < "$IN" > "$OUT" 2>>$DERROR
+  [ $? ] && throw "dp-fo: Transformation failed."
+  [ -n "$ERR" ] && throw $ERR
+}
+catch X {
+  echo ""
+  echo "##DPS>>"
+  echo $X
+  echo "<<DPS##"
+  echo ""
+  [ -n "$ERR" ] && return 1 || exit
+} finally {
+  if [ "$DEST" = "tmp" -o "$DEST" = "pipe" ] ; then
+    echo "$OUT"
+    return 0
+  elif [ "$DEBUG" = "false" ] ; then
+    [ "$DEST" = "rel" ] && D=$USRREL || D=$USRREV
+    p:cp -r -f "$OUT" "$D/$FOUT.fo"
+    echo "$D/$FOUT.fo"
+    clean
+    return 0
+  else
+    echo "$OUT"
+    echo "" 2>>$DERROR
+    echo "##DPS>>" 2>>$DERROR
+    echo "DEBUG MODE: $OUT ($OUT)" 2>>$DERROR
+    echo "<<DPS##" 2>>$DERROR
+    echo "" 2>>$DERROR
+    return 0
+  fi
+}
