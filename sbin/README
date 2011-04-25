@@ -2,11 +2,11 @@
 davidpriest.ca Documentation System (DPS)
 =========================================
 
-setenv      unixy environment. Use ". setenv" at command line prompt.
+boot      unixy environment. Use "./boot" at command line prompt.
 boot.bat    windows environment. Use "boot.bat" at command line prompt.
 
 [root]/opt/dps
-  David's Documentation System
+  Docbook Publishing System
   a bash-like environment for publication production and management.
   "backed up monthly"
 
