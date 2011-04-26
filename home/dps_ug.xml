@@ -24,6 +24,14 @@
 
     <revhistory>
       <revision>
+        <date>11-Apr-26</date>
+
+        <authorinitials>DCP</authorinitials>
+
+        <revremark>Updated: details on cloning installing.</revremark>
+      </revision>
+
+      <revision>
         <date>11-Mar-31</date>
 
         <authorinitials>DCP</authorinitials>
@@ -61,8 +69,8 @@
     </collab>
   </info>
 
-  <chapter>
-    <title>Using DPS</title>
+  <preface>
+    <title>Preface</title>
 
     <para>DPS hides directory structure and xi:include structure. Instead, it works on
     <emphasis>publications</emphasis>: a root document (article, book, part, set, or
@@ -83,22 +91,174 @@
     <command>dwhereis</command> will provide the absolute path to a publication; given a
     path, <command>dwhichis</command> will identify the root element
     <tag>xml:id</tag>.</para>
+  </preface>
+
+  <chapter>
+    <title>Installing DPS</title>
+
+    <para>The Docbook Publishing System comprises a suite of Java applications. Central to
+    them is <link xlink:href="http://sourceforge.net/projects/xmlsh/">XMLSH</link>, a
+    Bash-like shell environment that supports a set of utilities and command-line
+    conventions that make it easy to create XML transformation workflows.</para>
+
+    <note>
+      <para>On OS X and Linux systems, DPS is self-installing: on boot, it can fetch XMLSH
+      and install it to the DPS opt directory. </para>
+
+      <para>On Windows systems there is no standard capability for fetching files: after
+      cloning DPS you will need to install XMLSH manually before you can successfully boot
+      DPS. See <xref linkend="installing_support_sw"/> for details.</para>
+    </note>
+
+    <para>There are two installation scenarios. In both cases your Docbook 5 source is in
+    a subdirectory of <filename>home</filename> and your customizations are in
+    <filename>usr</filename>.</para>
 
     <section>
-      <title>Using DPS as the Superproject</title>
+      <title>Using DPS Standalone</title>
 
-      <para/>
+      <para>In this scenario, you clone the DPS repository directly. This provides you
+      with a work directory that uses the <uri
+      xlink:href="http://www.pathname.com/fhs/pub/fhs-2.3.html">Filesystem Hierarchy
+      Standard</uri>. Consequently, the DPS set of commands are in
+      <filename>bin</filename> and <filename>sbin</filename>, its libraries are in
+      <filename>lib</filename>, and supporting software is in
+      <filename>opt</filename>.</para>
+
+      <para>The DPS repository ignores the <filename>home</filename> and
+      <filename>usr</filename> directories. It is strongly recommended that you revise
+      <filename>.gitignore</filename> and configure a new remote origin (ie. decouple from
+      the DPS Git repository, so that your <filename>home</filename> and
+      <filename>usr</filename> directories are tracked):<programlisting>git config remote.origin.url git://<replaceable>your.server.com/project.git</replaceable></programlisting><procedure>
+          <title>Using DPS Standalone</title>
+
+          <step>
+            <para>Clone the DPS repository:<programlisting>git clone git@github.com:davidpriest/dps.git <replaceable>MyPubs</replaceable>&#10;cd <replaceable>MyPubs</replaceable></programlisting></para>
+          </step>
+
+          <step>
+            <para>Create your documentation and customization
+            subdirectories:<programlisting>mkdir home/doc-source&#10;mkdir usr</programlisting></para>
+          </step>
+
+          <step>
+            <para>???</para>
+          </step>
+
+          <step>
+            <para>Profit!</para>
+          </step>
+        </procedure></para>
     </section>
 
     <section>
-      <title>Using DPS as a Submodule</title>
+      <title>Using DPS in a Superproject</title>
 
-      <para/>
+      <para>In this scenario, you create a superproject that contains aliases to the DPS
+      boot commands and install DPS as a submodule in <filename>opt</filename>. </para>
+
+      <procedure>
+        <title>Using DPS in a Superproject</title>
+
+        <step>
+          <para>Create your superproject:<programlisting>mkdir MySuperProj&#10;cd MySuperProj&#10;git init</programlisting></para>
+        </step>
+
+        <step>
+          <para>Add DPS as a submodule:<programlisting>git submodule add git@github.com:davidpriest/dps.git opt/dps/</programlisting></para>
+        </step>
+
+        <step performance="optional">
+          <para>OPTIONAL:</para>
+
+          <para>Install your documentation and customizations as
+          submodules:<programlisting>git submodule add git@github.com:yourname/MyDocs home/doc-source/&#10;git submodule add git@github.com:yourname/MyDocsSupp usr/</programlisting></para>
+        </step>
+
+        <step>
+          <para>Initialize and update the submodules, installing them:<programlisting>git submodule init&#10;git submodule update</programlisting></para>
+        </step>
+
+        <step>
+          <para>Push the superproject to your git repository:<programlisting>git config add remote.origin git://<replaceable>your.server.com/project.git</replaceable></programlisting></para>
+        </step>
+      </procedure>
+    </section>
+
+    <section xml:id="installing_support_sw">
+      <title>Installing Support Software</title>
+
+      <para>If you are a Windows user, you will need to install <link
+      xlink:href="http://sourceforge.net/projects/xmlsh/">XMLSH</link>. If, during the
+      bootstrap process, DPS is unable to fetch resources from the internet, you may need
+      to manually install additional software.</para>
+
+      <para>The following packages are required, and are installed to the following
+      directories:</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>DPS</term>
+
+          <listitem>
+            <para>Source: <uri>https://github.com/davidpriest/dps</uri></para>
+
+            <para>Destination: <filename><replaceable>[installation
+            directory]</replaceable>/opt/dps</filename></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>XMLSH</term>
+
+          <listitem>
+            <para>Source: <uri>http://sourceforge.net/projects/xmlsh/</uri></para>
+
+            <para>Destination: <filename><replaceable>[installation
+            directory]</replaceable>/opt/xmlsh_1_1_4</filename></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Docbook 5 Schema</term>
+
+          <listitem>
+            <para>Source: <uri>http://www.docbook.org/xml/5.0/docbook-5.0.zip</uri></para>
+
+            <para>Destination: <filename><replaceable>[installation
+            directory]</replaceable>/opt/docbook-5.0</filename></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Docbook 5 XSL</term>
+
+          <listitem>
+            <para>Source:
+            <uri>http://downloads.sourceforge.net/project/docbook/docbook-xsl-ns/1.76.1/docbook-xsl-ns-1.76.1.zip</uri></para>
+
+            <para>Destination: <filename><replaceable>[installation
+            directory]</replaceable>/opt/docbook-xsl-ns-1.76.1</filename></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Xalan</term>
+
+          <listitem>
+            <para>Source:
+            <uri>http://apache.sunsite.ualberta.ca/xml/xalan-j/xalan-j_2_7_1-bin.zip</uri></para>
+
+            <para>Destination: <filename><replaceable>[installation
+            directory]</replaceable>/opt/xalan-j_2_7_1-bin</filename></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
     </section>
   </chapter>
 
   <chapter>
-    <title>DPS Internals</title>
+    <title>DPS Docbook Internals</title>
 
     <section>
       <title>Publication Structure</title>
@@ -212,6 +372,10 @@
         appropriately.</para>
       </section>
     </section>
+  </chapter>
+
+  <chapter>
+    <title>DPS Commands</title>
 
     <section>
       <title>Custom Commands</title>
