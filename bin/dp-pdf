@@ -24,8 +24,8 @@ try {
   # transform XML:FO to PDF
   CP="$OPTDIR/XEP/lib/crimson.jar:$OPTDIR/XEP/lib/saxon.jar:$OPTDIR/XEP/lib/xep.jar:$OPTDIR/XEP/lib/xt.jar"
   OUT=$T"_31.pdf"
-  echo "XEP: eval \"java -Xms128m -Xmx512m -cp {$CP} -Dcom.renderx.xep.CONFIG=$USRETC/xep.config.xml com.renderx.xep.XSLDriver -quiet -xml $IN -pdf $OUT\" >>$DERROR 2>>$DERROR" >>$DERROR
-  eval "java -Xms128m -Xmx512m -cp {$CP} -Dcom.renderx.xep.CONFIG=$USRETC/xep.config.xml com.renderx.xep.XSLDriver -quiet -xml $IN -pdf $OUT" >>$DERROR 2>>$DERROR
+  echo "XEP: eval \"java -Xms512m -Xmx512m -cp {$CP} -Dcom.renderx.xep.CONFIG=$USRETC/xep.config.xml com.renderx.xep.XSLDriver -quiet -xml $IN -pdf $OUT\" >>$DERROR 2>>$DERROR" >>$DERROR
+  eval "java -Xms512m -Xmx512m -cp {$CP} -Dcom.renderx.xep.CONFIG=$USRETC/xep.config.xml com.renderx.xep.XSLDriver -valid -xml $IN -pdf $OUT" >>$DERROR 2>>$DERROR
   [ $? ] && throw "dp-pdf: PDF rendering failed."
   [ -n "$ERR" ] && throw $ERR
 }
