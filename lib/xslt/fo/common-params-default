@@ -205,7 +205,7 @@ Reference Pages
 Tables 
 -->
     <xsl:param name="default.table.width"/>
-    <xsl:param name="nominal.table.width">6in</xsl:param>
+    <xsl:param name="nominal.table.width">5in</xsl:param>
     <xsl:param name="default.table.frame">all</xsl:param>
     <xsl:param name="default.table.rules">none</xsl:param>
     <xsl:attribute-set name="table.cell.padding">
