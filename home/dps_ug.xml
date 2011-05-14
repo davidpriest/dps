@@ -24,6 +24,14 @@
 
     <revhistory>
       <revision>
+        <date>11-May-09</date>
+
+        <authorinitials>DCP</authorinitials>
+
+        <revremark>Updated: configuration, doc &lt;info&gt; requirements.</revremark>
+      </revision>
+
+      <revision>
         <date>11-Apr-26</date>
 
         <authorinitials>DCP</authorinitials>
@@ -103,7 +111,7 @@
 
     <note>
       <para>On OS X and Linux systems, DPS is self-installing: on boot, it can fetch XMLSH
-      and install it to the DPS opt directory. </para>
+      and install it to the DPS opt directory.</para>
 
       <para>On Windows systems there is no standard capability for fetching files: after
       cloning DPS you will need to install XMLSH manually before you can successfully boot
@@ -114,7 +122,7 @@
     a subdirectory of <filename>home</filename> and your customizations are in
     <filename>usr</filename>.</para>
 
-    <section>
+    <section condition="nopub">
       <title>Using DPS Standalone</title>
 
       <para>In this scenario, you clone the DPS repository directly. This provides you
@@ -155,7 +163,7 @@
       <title>Using DPS in a Superproject</title>
 
       <para>In this scenario, you create a superproject that contains aliases to the DPS
-      boot commands and install DPS as a submodule in <filename>opt</filename>. </para>
+      boot commands and install DPS as a submodule in <filename>opt</filename>.</para>
 
       <procedure>
         <title>Using DPS in a Superproject</title>
@@ -189,7 +197,7 @@
       <title>Installing Support Software</title>
 
       <para>If you are a Windows user, you will need to install <link
-      xlink:href="http://sourceforge.net/projects/xmlsh/">XMLSH</link>. If, during the
+      xlink:href="http://sourceforge.net/projects/xmlsh/">XMLSH</link>. If during the
       bootstrap process, DPS is unable to fetch resources from the internet, you may need
       to manually install additional software.</para>
 
@@ -255,6 +263,52 @@
         </varlistentry>
       </variablelist>
     </section>
+
+    <section>
+      <title>Configuration</title>
+
+      <para>See, in this order:<variablelist>
+          <varlistentry>
+            <term><filename>opt/dps/boot.bat</filename> or
+            <filename>opt/dps/boot.sh</filename></term>
+
+            <listitem>
+              <para>These files configure the <uri
+              xlink:href="http://www.pathname.com/fhs/pub/fhs-2.3.html">Filesystem
+              Hierarchy Standard</uri>. These originally mapped to root directories, but
+              using DPS as a component in a superproject requires the paths to be slightly
+              mangled. Regardless, when writing DPS scripts, you can pretend you're
+              working with an FHS shell.</para>
+
+              <para>A few XMLSH paths are also configured in this file. In the end, it
+              boots XMLSH by specifying a boot file script.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term><filename>/opt/dps/sbin/boot</filename></term>
+
+            <listitem>
+              <para>An XMLSH script that configures the DPS publishing environment: the
+              location of certain source and output directories; a number of libraries;
+              miscellaneous TBI placeholder variables.</para>
+
+              <para>It then performs the kickstarter sanity check, loads some common
+              script functions, coughs up a shell prompt, and exits to the shell.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term><filename>/opt/dps/sbin/kickstart_dps</filename></term>
+
+            <listitem>
+              <para>An XMLSH script that checks for and, if not discovered, downloads
+              several required open-source libraries, eg. Docbook XML Schema, Docbook XSL
+              transformations, etc.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+    </section>
   </chapter>
 
   <chapter>
@@ -263,15 +317,22 @@
     <section>
       <title>Publication Structure</title>
 
-      <para>The following Docbook5 root elements are recognized as publications:
-      <tag>article</tag>, <tag>book</tag>, <tag>part</tag>, <tag>set</tag>,
-      <tag>reference</tag>.</para>
+      <para>The following Docbook5 root elements are recognized as publications: <tag
+      class="element">article</tag>, <tag class="element">book</tag>, <tag
+      class="element">part</tag>, <tag class="element">set</tag>, <tag
+      class="element">reference</tag>.</para>
 
-      <para>Publications <emphasis role="bold">must</emphasis> have an <tag>info</tag>
-      element as a child of the root element. The <tag>info</tag> element <emphasis
-      role="bold">must</emphasis> have two <tag>filename</tag> descendants:<variablelist>
+      <para>Publications <emphasis role="bold">must</emphasis> have an <tag
+      class="attribute">xml:id</tag></para>
+
+      <para>Publications <emphasis role="bold">must</emphasis> have an <tag
+      class="element">info</tag> element as a child of the root element. The <tag
+      class="element">info</tag> element <emphasis role="bold">must</emphasis> have two
+      <tag class="element">filename</tag> descendants:<variablelist>
           <varlistentry>
-            <term>filename[role="filename"]</term>
+            <term><tag class="starttag">filename
+            role="filename"</tag><replaceable>filename hint</replaceable><tag
+            class="endtag">filename</tag></term>
 
             <listitem>
               <para>The output file name for the publication, with no extension. The
@@ -284,7 +345,8 @@
           </varlistentry>
 
           <varlistentry>
-            <term>filename[role="style"]</term>
+            <term><tag class="starttag">filename role="style"</tag><replaceable>style
+            hint</replaceable><tag class="endtag">filename</tag></term>
 
             <listitem>
               <para>The suffix for the XSL transformation that will be applied to the
@@ -304,6 +366,13 @@
             </listitem>
           </varlistentry>
         </variablelist></para>
+
+      <informalexample>
+        <programlisting>&lt;article xml:id="id1234-ShortName"&#10;         xmlns="http://docbook.org/ns/docbook" &#10;         version="5.0"&gt;&#10;  &lt;info&gt;&#10;    &lt;title&gt;A Sample Article&lt;/title&gt;&#10;    &lt;subtitle&gt;DPS Demonstrations&lt;/subtitle&gt;&#10;    &lt;abstract&gt;&#10;      &lt;para&gt;Provides an example of DPS-compatible Docbook file.&lt;/para&gt;&#10;      &lt;para&gt;Filename: &lt;filename role="filename"&gt;dps-sample_article&lt;/filename&gt;&lt;/para&gt;&#10;      &lt;para&gt;Stylesheet: &lt;filename role="style"&gt;dps-samples&lt;/filename&gt;&lt;/para&gt;&#10;    &lt;/abstract&gt;&#10;    &lt;revhistory&gt;&#10;      &lt;revision&gt;&#10;        &lt;date&gt;11Jan01&lt;/date&gt;&#10;        &lt;authorinitials&gt;dcp&lt;/authorinitials&gt;&#10;        &lt;revremark&gt;created&lt;/revremark&gt;&#10;      &lt;/revision&gt;&#10;    &lt;/revhistory&gt;&#10;    &lt;copyright&gt;&#10;      &lt;year&gt;2011&lt;/year&gt;&#10;      &lt;holder&gt;David Priest, davidpriest.ca&lt;/holder&gt;&#10;    &lt;/copyright&gt;&#10;  &lt;/info&gt;&#10;  &lt;para&gt;This is an example of an Article. The interesting part &#10;is in its XML &lt;tag&gt;info&lt;/tag&gt; element. See &#10;&lt;filename&gt;dps_ug.xml&lt;/filename&gt; for detals.&lt;/para&gt;&#10;&lt;/article&gt;</programlisting>
+      </informalexample>
+
+      <para>You are otherwise free to structure your Docbook 5 source however you wish,
+      within the limitations of the XML engine (Saxon) used by XMLSH.</para>
     </section>
 
     <section xml:id="dps_profiling">

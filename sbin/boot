@@ -13,7 +13,7 @@ set +indent
 
 # important dps directories and files
 #dps root directories
-UPUB=$HOMEDIR
+UPUB=$HOMEDIR/doc-source; [ ! -d $UPUB ] && p:mkdir -p $UPUB
 USRREV=$HOMEDIR/doc-review; [ ! -d $USRREV ] && p:mkdir -p $USRREV
 USRREL=$HOMEDIR/doc-release; [ ! -d $USRREL ] && p:mkdir -p $USRREL
 

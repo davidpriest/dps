@@ -52,6 +52,7 @@ try {
     # get repo revision number
     if [ -e $USRDIR/etc/config.properties ] ; then
       REPO=$(xproperties -in $USRDIR/etc/config.properties -v repo.type)
+      OD=$(pwd); cd $UPUB
       case "$REPO" in
         hg|mercurial)
           REV=$(eval hg --cwd $UPUB id --id)
@@ -62,7 +63,7 @@ try {
           REV="SVN:"$REV
           ;;
         git)
-          REV=$(eval git log -1 --pretty=format:%h -- $UPUB)
+          REV=$(eval git log -1 --pretty=format:%h)
           REV="GIT:$REV"
           ;;
         *)
@@ -70,6 +71,7 @@ try {
           ERR="dp-db5: repotype not set in $USRDIR/etc/config.properties; "
           ;;
       esac
+      cd $OD
 #      l=16
 #      i=<{{$i}}>
 #      REV="string-join(for $i in 0 to (string-length(\"$REV\") idiv $l ) return substring(\"$REV\", $i*$l + 1, $l),\" \")" 
