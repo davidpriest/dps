@@ -20,7 +20,7 @@ try {
   # debug a strang bug
   [ x"$TEMPDIR"x != x"$PWD/tmp"x ] && {
     echo "PANIC!  TEMPDIR CHANGED?!?!"
-    echo "$TEMPDIR"
+    echo "$TEMPDIR" "$PWD"
     exit 1
   }
   # if tempdir is accidently null, don't do it!

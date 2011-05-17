@@ -14,7 +14,7 @@ set +indent
 # important dps directories and files
 #dps root directories
 UPUB=$HOMEDIR/doc-source; [ ! -d $UPUB ] && p:mkdir -p $UPUB
-USRREV=$HOMEDIR/doc-review; [ ! -d $USRREV ] && p:mkdir -p $USRREV
+USRREV=$HOMEDIR/doc-review
 USRREL=$HOMEDIR/doc-release; [ ! -d $USRREL ] && p:mkdir -p $USRREL
 
 #libaries
@@ -35,8 +35,6 @@ USRDCAT=$USRDIR/etc/$DCATNAME
 #TODO: use catalogs!
 #[ -d $OPTDIR/docbook-5.0 ] && DB5SCH=$OPTDIR/docbook-5.0 || throw "boot: Docbook Schemas not found"
 
-# dps defaults
-GRP="dps"
 # PROFILES must also set manually in xsl templates! AVT not allowed for template matches.
 ROOTS="article book part set reference"
 SGML_CATALOG_FILES=$SYSCAT:$USRDIR/etc/$CATNAME
@@ -59,9 +57,8 @@ echo "type `dhelp` for help"
 echo ""
 PS1="$GRP$ "
 
+# utilities
 #TODO: find all du_ files, loop
 [ -e $SBINDIR/du_setopts ] && . $SBINDIR/du_setopts
 [ -e $SBINDIR/du_setpub ] && . $SBINDIR/du_setpub
 [ -e $SBINDIR/du_setrally ] && . $SBINDIR/du_setrally
-
-# utilities

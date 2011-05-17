@@ -1,10 +1,10 @@
 # Displays a DPS ls directory listing
 function usage {
   echo "Publication Library listings"
-  echo "dls [-d|h] [-i|--idwarn]"
+  echo "dls [-d|h|x] [-i|--idwarn]"
   echo "  -dhx    : output detailed, human*, XMLSH xls"
   echo "  -i      : list only docs with missing root xml:ids (invokes a warning)"
-  echo " Lists all root documents in directory. Returns 0 on success."
+  echo " Lists all DPS root documents in publications directories. Returns 0 on success."
 } ;
 
 unset OPT
@@ -31,9 +31,10 @@ try {
   #TODO: use xls -R -l -a ; "contains[@type="file" @readable="true" @path endswith .xml]"
   #TODO: handle multiple filename output
   FL=$(xls -R | xpath "//file[matches(@path,\"$UPUB\")]//file[matches(@name,\".*\.xml\")]/@path/string()")
+  [ -z "$FL" ] && throw "No DPS publications found in "$UPUB
   #TODO: fails if no files w/xml:id
   BOOKS=$<(xgrep "/*[contains('{$ROOTS}',local-name()) and @xml:id]" $FL)
-  XL=<[ <library type="publications" roots="{$ROOTS}" id="{$GRP}" path="{$UPUB}"/> ]>
+  XL=<[ <library type="publications" roots="{$ROOTS}" path="{$UPUB}"/> ]>
   for P in $<(xpath -i $BOOKS "//*:file[not(@path=preceding::*:file/@path)]/@path/string()") ; do
     ID=$(xpath -cf "$P" "/*/@xml:id/string()")
     FOUT=$(xpath -cf "$P" "/*/*:info//*:filename[@role='filename']")

@@ -1,0 +1,22 @@
+unset REV
+if [ -e $USRDIR/etc/config.properties ] ; then
+  REPO=$(xproperties -in $USRDIR/etc/config.properties -v repo.type)
+  OD=$(pwd); cd $UPUB
+  case "$REPO" in
+    hg|mercurial)
+      REV=$(eval hg --cwd $UPUB id --id)
+      ;;
+    svn)
+      REV=$(eval svn info --xml $UPUB | xpath "//commit/@revision/string()")
+      ;;
+    git)
+      REV=$(eval git log -1 --pretty=format:%h)
+      ;;
+    *)
+      REV=""
+      ERR="dp-db5: repotype not set in $USRDIR/etc/config.properties; "
+      ;;
+  esac
+  REV=$(xpath -n "substring(\"$REV\",1,12)") #12digit rev indicator
+  echo "$REV"
+fi

@@ -9,4 +9,4 @@ TODO
 \.hg*
 \.svn*
 !home/dps_ug.xml
-
+!home/dps-resources

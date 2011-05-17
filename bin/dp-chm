@@ -23,8 +23,15 @@ try {
   
   # construct a style file reference
   XSL=$(xpath -cf $IN "string(/*/*:info//*:filename[@role='style'])")
-  [ -e "$USRXSL/chm/$XSL/$ROOT.xsl" ] && XSL="$USRXSL/chm/$XSL/$ROOT.xsl" || XSL="$SYSXSL/chm/$ROOT.xsl"
-  [ ! -e "$XSL" ] && XSL="$SYSXSL/chm/nwalsh.xsl"
+  if [ -e "$USRXSL/chm/$XSL/$ROOT.xsl" ] ; then
+    XSL="$USRXSL/chm/$XSL/$ROOT.xsl"
+  elif [ -e "$SYSXSL/chm/$XSL/$ROOT.xsl" ] ; then
+    XSL="$SYSXSL/chm/$XSL/$ROOT.xsl"
+  elif [ -e "$SYSXSL/chm/$ROOT.xsl" ] ; then
+    XSL="$SYSXSL/chm/$ROOT.xsl"
+  else
+    XSL="$SYSXSL/chm/nwalsh.xsl"
+  fi
   SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
   OUT=$T"_21.chm.$SID"
   p:mkdir $OUT
