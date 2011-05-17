@@ -18,7 +18,7 @@ try {
   fi
   
   # post-profiling, there is only one filename
-  FOUT=$(xpath -cf $IN "/*/*:info//*:filename[@role='filename']/string()") 2>>$DERROR
+  FOUT=$(xpath -cf $IN "string(/*/*:info//*:filename[@role='filename'])") 2>>$DERROR
   [ $? ] && FOUT=$(xpath -cf $P "string(/*/@xml:id/string())")
 
   # transform DB5 to XML:FO
@@ -37,8 +37,10 @@ try {
   OUT=$T"_21.$SID.fo.xml"
   echo "FO: xslt -f \"$XSL\" -v target.database.document \"$VARDIR/targets/pdf/olinkdb.xml\" db5.path \"$XSLFO\" img.src.path \"$BASE/\" debug.mode \"$DEBUG\" draft.mode \"$DRAFT\" < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
   xslt -f "$XSL" -v target.database.document "$VARDIR/targets/pdf/olinkdb.xml" db5.path "$XSLFO" img.src.path "$BASE/" debug.mode "$DEBUG" draft.mode "$DRAFT" < "$IN" > "$OUT" 2>>$DERROR
+  xecho $<(xed -i $OUT -m "/*" -a <[ attribute {"role"} {$FOUT} ]>) > $OUT
   [ $? ] && throw "dp-fo: Transformation failed."
   [ -n "$ERR" ] && throw $ERR
+  
 }
 catch X {
   echo ""

@@ -13,6 +13,7 @@ function du_setpub {
       [ $? ] && throw "du_setpub: BASE error."
       ROOT=$(xpath -cf $P "string(/*/local-name())")
       [ $? ] && throw "du_setpub: ROOT error."
+      FOUT=$(xpath -cf $P "string(/*/*:info//*:filename[@role='filename'])") 2>>$DERROR
       [ -z $FOUT ] && FOUT="$PID"
       T=$(du_mktemp "$FOUT")
     else
