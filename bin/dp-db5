@@ -13,9 +13,10 @@ try {
 
   # inclusions
   OUT=$T"_11.incl.xml"
-  xinclude "$P" > "$OUT" 2>>$DERROR
+  cd $BASE
+  xinclude file:///"$P" > "$OUT" 2>>$DERROR
   [ $? ] && throw "dp-db5: inclusions step failed."
-  
+
   # profile: DPS conventions
   IN=$OUT
   XSL=$SYSXSL"/db5/dps-profile.xsl"
@@ -35,7 +36,7 @@ try {
     xslt -f "$XSL" -v profile.arch $PF profile.audience $PF profile.condition $PF profile.lang $PF profile.os $PF profile.revision $PF profile.security $PF profile.status $PF profile.userlevel $PF profile.vendor $PF profile.wordsize $PF debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
     [ $? ] && throw "dp-db5: Docbook conventions profiling step failed."
   }
-  
+
   # fix IDs
   IN=$OUT
   XSL=$SYSXSL"/uniqid.xsl"
@@ -44,7 +45,7 @@ try {
   echo "FIX IDS: xslt -f \"$XSL\" -v debug.mode $DEBUG draft.mode $DRAFT < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
   xslt -f "$XSL" -v debug.mode $DEBUG draft.mode $DRAFT < "$IN" > "$OUT" 2>>$DERROR
   [ $? ] && throw "dp-db5: DPS ID Fixing step failed."
-  
+
   # tweak?
 
   # draft: purple
@@ -52,7 +53,7 @@ try {
     # get repo revision number
     if [ -e $USRDIR/etc/config.properties ] ; then
       REPO=$(xproperties -in $USRDIR/etc/config.properties -v repo.type)
-      OD=$(pwd); cd $UPUB
+      OD=$(p:pwd); cd $UPUB
       case "$REPO" in
         hg|mercurial)
           REV=$(eval hg --cwd $UPUB id --id)
@@ -63,7 +64,11 @@ try {
           REV="SVN:"$REV
           ;;
         git)
+          [ $OS ] && {
+          REV=$(eval git.cmd log -1 --pretty=format:%h)
+          } || {
           REV=$(eval git log -1 --pretty=format:%h)
+          }
           REV="GIT:$REV"
           ;;
         *)
@@ -74,7 +79,7 @@ try {
       cd $OD
 #      l=16
 #      i=<{{$i}}>
-#      REV="string-join(for $i in 0 to (string-length(\"$REV\") idiv $l ) return substring(\"$REV\", $i*$l + 1, $l),\" \")" 
+#      REV="string-join(for $i in 0 to (string-length(\"$REV\") idiv $l ) return substring(\"$REV\", $i*$l + 1, $l),\" \")"
 #      REV=$(xpath -n "$REV")
       REV=$(xpath -n "substring(\"$REV\",1,16)") #12digit rev, + HG/SVN/GIT indicator
     else

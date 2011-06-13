@@ -14,7 +14,7 @@ set +indent
 # important dps directories and files
 #dps root directories
 UPUB=$HOMEDIR/doc-source; [ ! -d $UPUB ] && p:mkdir -p $UPUB
-USRREV=$HOMEDIR/doc-review
+USRREV=$HOMEDIR/doc-review; [ ! -d $USRREV ] && p:mkdir -p $USRREV
 USRREL=$HOMEDIR/doc-release; [ ! -d $USRREL ] && p:mkdir -p $USRREL
 
 #libaries
@@ -55,7 +55,7 @@ echo "GNU General Public License"
 echo ""
 echo "type `dhelp` for help"
 echo ""
-PS1="$GRP$ "
+PS1="DPS$ "
 
 # utilities
 #TODO: find all du_ files, loop
