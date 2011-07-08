@@ -14,7 +14,7 @@ try {
   # inclusions
   OUT=$T"_11.incl.xml"
   cd $BASE
-  xinclude file:///"$P" > "$OUT" 2>>$DERROR
+  xinclude "file://$P" > "$OUT" 2>>$DERROR
   [ $? ] && throw "dp-db5: inclusions step failed."
 
   # profile: DPS conventions
