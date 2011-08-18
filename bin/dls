@@ -30,7 +30,7 @@ try {
   # find root documents
   #TODO: use xls -R -l -a ; "contains[@type="file" @readable="true" @path endswith .xml]"
   #TODO: handle multiple filename output
-  FL=$(xls -R | xpath "//file[matches(@path,\"$UPUB\")]//file[matches(@name,\".*\.xml\")]/@path/string()")
+  FL=$(xls -R $UPUB | xpath "//file[matches(@path,\"$UPUB\")]//file[matches(@name,\".*\.xml\")]/@path/string()")
   [ -z "$FL" ] && throw "No DPS publications found in "$UPUB
   #TODO: fails if no files w/xml:id
   BOOKS=$<(xgrep "/*[contains('{$ROOTS}',local-name()) and @xml:id]" $FL)

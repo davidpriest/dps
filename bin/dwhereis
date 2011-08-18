@@ -28,7 +28,7 @@ done
 
 try {
   if [ $PID ] ; then
-    FL=$(xls -R | xpath "//file[matches(@path,\"$UPUB\")]//file[matches(@name,\".*\.xml\")]/@path/string()")
+    FL=$(xls -R $UPUB | xpath "//file[matches(@path,\"$UPUB\")]//file[matches(@name,\".*\.xml\")]/@path/string()")
     [ $? ] && throw "dwhereis: FL error."
     BOOK=$<(xgrep "/*[@xml:id=\"$PID\"]" $FL)
     [ $? ] && throw "dwhereis: BOOK error."
