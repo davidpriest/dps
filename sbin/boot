@@ -23,7 +23,7 @@ SYSXSD=$LIBDIR/xsd
 SYSXSL=$LIBDIR/xslt
 USRXSL=$USRDIR/lib/xslt
 USRETC=$USRDIR/etc
-XSLFO=$OPTDIR/docbook-xsl-ns-1.76.1
+XSLFO=$OPTDIR/docbook-xslt2-2.0.0/xslt/base
 
 #catalogs
 CATNAME='catalog.xml'

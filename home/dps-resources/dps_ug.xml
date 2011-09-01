@@ -20,8 +20,6 @@
       <para>Stylesheet: <filename role="style">dps</filename></para>
     </abstract>
 
-    <pubdate><?dbtimestamp format="Y.b.d"?></pubdate>
-
     <revhistory>
       <revision>
         <date>11-May-09</date>

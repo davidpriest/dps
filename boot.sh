@@ -34,7 +34,7 @@ export LIBDIR=$DPSDIR/lib
 export SBINDIR=$DPSDIR/sbin
 
 # XMLSH settings
-export XMLSH=$OPTDIR/xmlsh_1_1_4
+export XMLSH=$OPTDIR/xmlsh_1_1_7
 export PATH=$XMLSH/unix:$PATH
 export XPATH=$PWD/usr/bin:$SBINDIR:$BINDIR
 export XLOGFILE=$PWD/var/log/xmlsh.log
@@ -43,10 +43,10 @@ export XLOGFILE=$PWD/var/log/xmlsh.log
 [ ! -e $XMLSH ] && { 
   echo "setenv: $XMLSH not found"
   echo "attempting to install"
-  ftp -o  $OPTDIR/xmlsh_1_1_4.zip http://downloads.sourceforge.net/project/xmlsh/xmlsh/1.1.4/xmlsh_1_1_4.zip
+  ftp -o  $OPTDIR/xmlsh_1_1_7.zip http://downloads.sourceforge.net/project/xmlsh/xmlsh/1.1.7/xmlsh_1_1_7.zip
   wait
-  unzip $OPTDIR/xmlsh_1_1_4.zip -d $OPTDIR
-  sudo chmod u+x $OPTDIR/xmlsh_1_1_4/unix/xmlsh
+  unzip $OPTDIR/xmlsh_1_1_7.zip -d $OPTDIR
+  sudo chmod u+x $OPTDIR/xmlsh_1_1_7/unix/xmlsh
   echo ""
   echo "Run '. setenv' again."
   return 1 
