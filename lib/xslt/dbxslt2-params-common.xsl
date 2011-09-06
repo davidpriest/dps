@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:db="http://docbook.org/ns/docbook" xmlns:f="http://docbook.org/xslt/ns/extension" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns:db="http://docbook.org/ns/docbook"
+xmlns:f="http://docbook.org/xslt/ns/extension" version="2.0" id="xslt.fo.params.common">
+<!-- TODO: diff w/stock params, remove common (unchanged) settings -->
   <xsl:param name="admonition.default.titles" select="1"/>
   <xsl:param name="admonition.graphics" select="false()"/>
   <xsl:param name="admonition.graphics.extension">.svg</xsl:param>
@@ -84,8 +87,8 @@
   <xsl:param name="glossary.collection" select="''"/>
   <xsl:param name="glossentry.show.acronym" select="'no'"/>
   <xsl:param name="glossterm.auto.link" select="0"/>
-  <xsl:param name="graphic.extensions" select="('svg','png','jpg','jpeg','gif','bmp',       'avi', 'mpg', 'mpeg', 'qt')"/>
-  <xsl:param name="graphic.formats" select="('svg','png','jpg','jpeg','gif','gif87a','gif89a','bmp',                     'linespecific')"/>
+  <xsl:param name="graphic.extensions" select="('svg','png','jpg','jpeg','gif','bmp',   'avi', 'mpg', 'mpeg', 'qt')"/>
+  <xsl:param name="graphic.formats" select="('svg','png','jpg','jpeg','gif','gif87a','gif89a','bmp', 'linespecific')"/>
   <xsl:param name="graphicsize.extension" select="1"/>
   <xsl:param name="graphicsize.use.img.src.path" select="0"/>
   <xsl:param name="html.base" select="''"/>
@@ -129,12 +132,13 @@
   <xsl:param name="olink.insert.page.number" select="0"/>
   <xsl:attribute-set name="olink.properties">
 </xsl:attribute-set>
-  <xsl:param name="orderedlist.numeration.styles" select="('arabic',       'loweralpha', 'lowerroman',                     'upperalpha', 'upperroman')"/>
+  <xsl:param name="orderedlist.numeration.styles" select="('arabic', 'loweralpha', 'lowerroman', 'upperalpha', 'upperroman')"/>
+  <xsl:param name="passivetex.extensions"/>
   <xsl:param name="persistent.generated.ids" select="1"/>
   <xsl:param name="pixels.per.inch" select="90"/>
   <xsl:param name="points.per.em" select="10"/>
   <xsl:param name="preprocess" select="''"/>
-  <xsl:param name="procedure.step.numeration.styles" select="('arabic',       'loweralpha', 'lowerroman',                     'upperalpha', 'upperroman')"/>
+  <xsl:param name="procedure.step.numeration.styles" select="('arabic', 'loweralpha', 'lowerroman', 'upperalpha', 'upperroman')"/>
   <xsl:param name="profile.arch" select="''"/>
   <xsl:param name="profile.attribute" select="''"/>
   <xsl:param name="profile.condition" select="''"/>
@@ -211,4 +215,3 @@
   </xsl:param>
   <xsl:param name="xref.with.number.and.title" select="1"/>
 </xsl:stylesheet>
-

@@ -11,7 +11,7 @@
     <xsl:apply-templates select="*"/>
     <xsl:copy-of select="document('purple.xml')//*[@xml:id='draftnote']"/>
   </xsl:template>
-  <xsl:template match="d:para|d:mediaobject|d:seg[position()=last()]">
+  <xsl:template match="d:xpara|d:xmediaobject|d:xseg[position()=last()]">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:if test="not(ancestor-or-self::d:footnote|ancestor-or-self::d:info|ancestor-or-self::d:sidebar)">

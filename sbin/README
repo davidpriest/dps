@@ -2,7 +2,7 @@
 davidpriest.ca Documentation System (DPS)
 =========================================
 
-boot      unixy environment. Use "./boot" at command line prompt.
+boot        unixy environment. Use "./boot" at command line prompt.
 boot.bat    windows environment. Use "boot.bat" at command line prompt.
 
 [root]/opt/dps

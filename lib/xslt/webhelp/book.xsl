@@ -4,7 +4,7 @@
 xmlns:html="http://www.w3.org/1999/xhtml" xmlns:fo="http://www.w3.org/1999/XSL/Format"
 xmlns:d="http://docbook.org/ns/docbook" xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0"
 xmlns:svg="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" id="wh_book" version="1.0">
-  <xsl:import href="../../../opt/docbook-xslt2-2.0.0/xslt/base/fo/docbook.xsl"/>
+  <xsl:import href="../dbxslt2-pointer.xsl"/>
   <xsl:import href="../db5/common-params.xsl"/>
   <!-- includes override imports -->
   <xsl:include href="common-params.xsl"/>

@@ -19,7 +19,7 @@ SCRIPT_PATH=`pwd`;
 popd  > /dev/null
 #"SCRIPT_PATH"
 
-export DPSDIR=$SCRIPT_PATH
+export DPSDIR=$SCRIPT_PATH/opt/dps
 
 #hfs root directories
 export HOMEDIR=$PWD/home
@@ -60,4 +60,4 @@ export XLOGFILE=$PWD/var/log/xmlsh.log
 [ -f .setenv ] && . .setenv
 
 echo Booting XMLSH
-xmlsh -rcfile $SBINDIR/boot
+xmlsh -rcfile boot.xsh

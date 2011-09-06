@@ -35,9 +35,9 @@ try {
   fi
   SID=$(xpath -cf $XSL "/*[@id]/@id/string()")
   OUT=$T"_21.$SID.fo.xml"
-  echo "FO: xslt -f \"$XSL\" -v target.database.document \"$VARDIR/targets/pdf/olinkdb.xml\" db5.path \"$XSLFO\" img.src.path \"$BASE/\" debug.mode \"$DEBUG\" draft.mode \"$DRAFT\" < \"$IN\" > \"$OUT\" 2>>$DERROR" >>$DERROR
-  xslt -f "$XSL" -v target.database.document "$VARDIR/targets/pdf/olinkdb.xml" db5.path "$XSLFO" img.src.path "$BASE/" debug.mode "$DEBUG" draft.mode "$DRAFT" output.dir "$OUT" < "$IN" > "$OUT" 2>>$DERROR
-#  xecho $<(xed -i $OUT -m "/*" -a <[ attribute {"role"} {$FOUT} ]>) > $OUT
+  echo "FO: xslt -f \"$XSL\" debug.mode $DEBUG draft.mode $DRAFT media.dir $BASE/media-common" >>$DERROR
+  xslt -f "$XSL" -v debug.mode "$DEBUG" draft.mode "$DRAFT" media.dir "$UPUB/media-common" repo.id "1111" < "$IN" > "$OUT" 2>>$DERROR
+  xecho $<(xed -i $OUT -m "/*" -a <[ attribute {"role"} {$FOUT} ]>) > $OUT
   [ $? ] && throw "dp-fo: Transformation failed."
   [ -n "$ERR" ] && throw $ERR
   

@@ -40,6 +40,6 @@ if not exist %XMLSH% (
 )
 
 echo "Booting DPS"
-xmlsh -rcfile %SBINDIR%/boot
+xmlsh -rcfile boot.xsh
 
 exit /B
