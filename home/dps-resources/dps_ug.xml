@@ -12,47 +12,13 @@
 
     <subtitle>Workflows for Docbook XML</subtitle>
 
-    <abstract>
+    <abstract role="dps">
       <para>A user guide for DPS.</para>
 
       <para>Filename: <filename role="filename">DPS_User_Guide</filename></para>
 
       <para>Stylesheet: <filename role="style">dps</filename></para>
     </abstract>
-
-    <revhistory>
-      <revision>
-        <date>11-May-09</date>
-
-        <authorinitials>DCP</authorinitials>
-
-        <revremark>Updated: configuration, doc &lt;info&gt; requirements.</revremark>
-      </revision>
-
-      <revision>
-        <date>11-Apr-26</date>
-
-        <authorinitials>DCP</authorinitials>
-
-        <revremark>Updated: details on cloning installing.</revremark>
-      </revision>
-
-      <revision>
-        <date>11-Mar-31</date>
-
-        <authorinitials>DCP</authorinitials>
-
-        <revremark>Updated: new structure, commands, functions.</revremark>
-      </revision>
-
-      <revision>
-        <date>11-Feb-11</date>
-
-        <authorinitials>DCP</authorinitials>
-
-        <revremark>Started.</revremark>
-      </revision>
-    </revhistory>
 
     <copyright>
       <year>2011</year>
@@ -73,6 +39,10 @@
         <uri>http://davidpriest.ca</uri>
       </org>
     </collab>
+
+    <legalnotice>
+      <para>Legal notice here.</para>
+    </legalnotice>
   </info>
 
   <preface>
@@ -99,8 +69,46 @@
     <tag>xml:id</tag>.</para>
   </preface>
 
-  <chapter>
+  <chapter xml:id="c_installing_dps">
     <title>Installing DPS</title>
+
+    <info>
+      <abstract role="dps" xml:id="c_rpo">
+        <title>End-Product Definition</title>
+
+        <para><variablelist>
+            <varlistentry>
+              <term>Reason</term>
+
+              <listitem>
+                <para>The singular reason this is needed.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Purpose</term>
+
+              <listitem>
+                <para>The singular purpose for this thing.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Objectives</term>
+
+              <listitem>
+                <para>The things this thing will do.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist></para>
+      </abstract>
+
+      <abstract role="dps" xml:id="abstract_c_installing_dps">
+        <title condition="nopub">How This Book is Organized</title>
+
+        <para>A summary of the chapter contents, for HTBiO.</para>
+      </abstract>
+    </info>
 
     <para>The Docbook Publishing System comprises a suite of Java applications. Central to
     them is <link xlink:href="http://sourceforge.net/projects/xmlsh/">XMLSH</link>, a

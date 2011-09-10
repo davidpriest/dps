@@ -12,6 +12,7 @@ xmlns:svg="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" id="xslt.fo.book" v
   <xsl:import href="../dbxslt2-params-common.xsl"/>
   <xsl:import href="./params-common.xsl"/>
   <xsl:import href="./params-book.xsl"/>
+  <xsl:import href="./titlepages.xsl"/>
   <!-- include: "The order of declarations within a stylesheet level is the
   same as the document order that would result if each stylesheet module were
   inserted textually in place of the xsl:include element that references it.""

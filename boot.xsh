@@ -23,7 +23,7 @@ SYSXSD=$LIBDIR/xsd
 SYSXSL=$LIBDIR/xslt
 USRXSL=$USRDIR/lib/xslt
 USRETC=$USRDIR/etc
-XSLFO=$OPTDIR/docbook-xslt2/release/2.0.0/xslt/base
+XSLFO=$OPTDIR/docbook-xslt2/xslt/base
 
 #catalogs
 CATNAME='catalog.xml'
@@ -63,9 +63,8 @@ fi
 if [ ! -d $OPTDIR/docbook-xslt2 ] ; then
   echo "$OPTDIR/docbook-xslt2 not found."
   echo "Please be patient as it is downloaded..."
-  git clone git://github.com/davidpriest/docbook.github.com.git $OPTDIR/docbook-xslt2
+  git clone git@github.com:davidpriest/xslt20-stylesheets.git $OPTDIR/docbook-xslt2
   wait
-  xunzip -f $OPTDIR/docbook-xslt2/release/2.0.0/docbook-xslt2-2.0.0.zip
 fi
 if [ ! -d $OPTDIR/xalan-j_2_7_1 ] ; then
   echo "$OPTDIR/xalan-j_2_7_1 not found."
@@ -99,4 +98,4 @@ PS1="DPS$ "
 #TODO: find all du_ files, loop
 [ -e $SBINDIR/du_setopts ] && . $SBINDIR/du_setopts
 [ -e $SBINDIR/du_setpub ] && . $SBINDIR/du_setpub
-[ -e $SBINDIR/du_setrally ] && . $SBINDIR/du_setrally
+[ -e $SBINDIR/set_targetprocess ] && . $SBINDIR/set_targetprocess

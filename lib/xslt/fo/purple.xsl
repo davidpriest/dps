@@ -111,7 +111,7 @@
   <!-- tiny purple numbers -->
   <xsl:template match="d:para|d:mediaobject|d:seg[position()=last()]">
     <xsl:choose>
-      <xsl:when test="$draft.mode='yes'">
+      <xsl:when test="$draft.mode='yes' and not(ancestor-or-self::d:footnote|ancestor-or-self::d:info|ancestor-or-self::d:sidebar)">
         <fo:block xsl:use-attribute-sets="purple.wrap.properties">
           <xsl:if test="not(ancestor-or-self::d:footnote|ancestor-or-self::d:info|ancestor-or-self::d:sidebar)">
             <xsl:variable name="elementnum">
