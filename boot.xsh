@@ -36,7 +36,7 @@ USRDCAT=$USRDIR/etc/$DCATNAME
 #[ -d $OPTDIR/docbook-5.0 ] && DB5SCH=$OPTDIR/docbook-5.0 || throw "boot: Docbook Schemas not found"
 
 # PROFILES must also set manually in xsl templates! AVT not allowed for template matches.
-ROOTS="article book part set reference"
+ROOTS="article book part set refentry"
 SGML_CATALOG_FILES=$SYSCAT:$USRDIR/etc/$CATNAME
 TARGDIR=$VARDIR/etc/targets/
 DERROR=$TEMPDIR/error.txt
@@ -99,3 +99,4 @@ PS1="DPS$ "
 [ -e $SBINDIR/du_setopts ] && . $SBINDIR/du_setopts
 [ -e $SBINDIR/du_setpub ] && . $SBINDIR/du_setpub
 [ -e $SBINDIR/set_targetprocess ] && . $SBINDIR/set_targetprocess
+[ -e $SBINDIR/tp_setcontext ] && . $SBINDIR/tp_setcontext

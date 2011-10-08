@@ -1,0 +1,23 @@
+import commands posix
+function set_targetprocess {
+  try {
+    unset tpURI tpUSER tpPASS
+    [ -e $USRDIR/etc/config.properties ] && {
+      tpURI=$(xproperties -in $USRDIR/etc/config.properties -v tp.uri)
+      tpUSER=$(xproperties -in $USRDIR/etc/config.properties -v tp.username)
+      tpPASS=$(xproperties -in $USRDIR/etc/config.properties -v tp.password)
+    } || {
+      throw "set_targetprocess: $USRDIR/etc/config.properties not found; Target Process settings unavailable."
+    }
+    [ -n "$ERR" ] && throw $ERR
+  } catch X {
+    echo ""
+    echo "##DDS>>"
+    echo $X
+    echo "<<DDS##"
+    echo ""
+    return 1
+  } finally {
+    return 0
+  }
+}

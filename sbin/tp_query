@@ -1,23 +1,17 @@
 # Query TargetProcess
 function usage {
   echo "Query TargetProcess API"
-  echo "tp_query username password query"
+  echo "tp_query [query]"
   echo "Returns the query response."
 } ;
 
-while [ $# -gt 0 ]; do
-  case "$1" in
-    -?|-h|--help)
-      usage; exit
-      ;;
-    *)
-      ;;
-  esac
-  shift
-done
+set_targetprocess
+tpDEST=$tpURI"\/"$1
 
 try {
-  
+  echo TargetProcess URL: $tpURI/$1 >>$DERROR
+  echo "curl --silent --max-time 60 --globoff --ntlm --user \"$tpUSER\":\"$tpPASS\" -H \"Accept-Charset: utf-8\" --url \"$tpDEST\" | tee $TEMPDIR/RESP.xml >{RESP}" >>$DERROR
+  curl --silent --max-time 60 --globoff --ntlm --user "$tpUSER":"$tpPASS" -H "Accept-Charset: utf-8" --url "$tpDEST" | tee $TEMPDIR/RESP.xml >{RESP}
   
   [ -n "$ERR" ] && throw $ERR
 }
@@ -29,5 +23,6 @@ catch X {
   echo ""
   return 1
 } finally {
+  xquote <[ $RESP ]>
   return 0
 }
