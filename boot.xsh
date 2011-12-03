@@ -9,7 +9,7 @@ declare namespace html=http://www.w3.org/1999/xhtml
 declare namespace fo=http://www.w3.org/1999/XSL/Format
 declare namespace db=http://docbook.org/ns/docbook
 declare namespace fn=http://www.w3.org/2005/xpath-functions
-set +indent
+set -indent
 
 # important dps directories and filesz
 #dps root directories

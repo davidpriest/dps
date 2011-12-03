@@ -1,28 +1,49 @@
 # Query TargetProcess
-function usage {
-  echo "Query TargetProcess API"
-  echo "tp_query [query]"
-  echo "Returns the query response."
-} ;
-
 set_targetprocess
-tpDEST=$tpURI"\/"$1
+
+# change spaces to %20
+Q=$*
+# change spaces to %20
+tpQ=<[ string-join(for $s in tokenize($Q,"&amp;amp;") return iri-to-uri($s),"&amp;") ]>
+[ $(echo <[ starts-with($tpQ,$tpURI) ]>) = true ] && tpDEST="$tpQ" || tpDEST="$tpURI$tpQ"
 
 try {
-  echo TargetProcess URL: $tpURI/$1 >>$DERROR
-  echo "curl --silent --max-time 60 --globoff --ntlm --user \"$tpUSER\":\"$tpPASS\" -H \"Accept-Charset: utf-8\" --url \"$tpDEST\" | tee $TEMPDIR/RESP.xml >{RESP}" >>$DERROR
-  curl --silent --max-time 60 --globoff --ntlm --user "$tpUSER":"$tpPASS" -H "Accept-Charset: utf-8" --url "$tpDEST" | tee $TEMPDIR/RESP.xml >{RESP}
-  
-  [ -n "$ERR" ] && throw $ERR
-}
+  curl --silent --max-time 15 --globoff --ntlm --user "$tpUSER":"$tpPASS" -H "Accept-Charset: utf-8" --url "${tpDEST}" >{RESP}
+} 
 catch X {
-  echo ""
-  echo "##DDS>>"
-  echo $X
-  echo "<<DDS##"
-  echo ""
+  echo "XMLSH SCRIPT ERROR" 1>&2
+  echo "TargetProcess failed to respond" 1>&2
   return 1
-} finally {
-  xquote <[ $RESP ]>
-  return 0
 }
+
+[ -z "$RESP" ] && {
+  echo "XMLSH SCRIPT ERROR" 1>&2
+  echo "TargetProcess failed to respond" 1>&2
+  throw "curl --url $tpDEST"
+}
+
+check=<[ contains($RESP,'&lt;head&gt;&#xD;') ]>
+[ "$check" = "true" ] && { 
+  echo $RESP 1>&2 ; return 1 
+}
+
+response=$<(xquote <[ $RESP ]> )
+
+check=<[ local-name($response/*) ]>
+[ "$check" = "Error" ] && {
+  xecho $response 1>&2 ; return 1 
+  return 1
+}
+
+more=<[ $response/Items/@Next/string() ]>
+[ -n "$more" ] && {
+  next_resp=$<(tp_query "$more" )
+  for item in <[ $next_resp/Items/* ]> ; do
+    response=$<(xed -xpath "/Items" -a $item <{response})
+  done
+}
+
+[ -n "$ERR" ] && throw $ERR
+
+xecho $response
+return 0

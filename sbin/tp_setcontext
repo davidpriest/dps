@@ -1,7 +1,7 @@
 function tp_setcontext {
   # Set environment variables for TP
   try {
-    context=$<(tp_query Context)
+    context=$<(tp_query "Context")
     tpACID=$(xpath -i $context -s -q "/Context/@Acid")
     tpUID=$(xpath -i $context -s -q "/Context/LoggedUser/@Id")
   }

@@ -24,4 +24,5 @@ xmlns:svg="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" id="xslt.fo.book" v
   <xsl:param name="output.dir" select="''"/> <!-- used by common.xsl "f:mediaobject-href" @ line 970 -->
   <xsl:param name="media.dir" select="''"/> <!-- used to determine media-common for various elements -->
   <xsl:param name="repo.id" select="'NUL'"/>
+  <xsl:attribute-set name="footnote.block.properties"/>
 </xsl:stylesheet>

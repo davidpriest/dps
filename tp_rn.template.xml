@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article version="5.0" xml:id="releasenotes" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:tp="http://dev.targetprocess.com/" xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:m="http://www.w3.org/1998/Math/MathML"
+         xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0"
+         xmlns:html="http://www.w3.org/1999/xhtml" xmlns:functx="http://www.functx.com"
+         xmlns:fo="http://www.w3.org/1999/XSL/Format"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <?xml-stylesheet href="shortdoc" type="text/xsl"?>
+
+  <?dps href=""?>
+
+  <info>
+    <title><phrase role="releasename"/> Release Notes</title>
+
+    <abstract>
+      <para>Filename: <filename role="filename"><phrase
+      role="releasename"/></filename></para>
+
+      <para>Stylesheet: <filename role="style">shortdoc</filename></para>
+    </abstract>
+
+    <pubdate><?dbtimestamp format="Y.b.d"?></pubdate>
+
+    <copyright>
+      <year>2011</year>
+
+      <holder>MANDIANT Corporation</holder>
+    </copyright>
+
+    <collab>
+      <person>
+        <personname>david priest</personname>
+
+        <email>docs@davidpriest.ca</email>
+      </person>
+
+      <org>
+        <orgname class="informal">davidpriest.ca</orgname>
+
+        <uri>http://davidpriest.ca</uri>
+      </org>
+    </collab>
+  </info>
+
+  <important>
+    <para>The latest version of this document is available at
+    <uri>https://forums.mandiant.com/tags/releases/</uri></para>
+  </important>
+
+  <section xml:id="newfeatures">
+    <title>New Features</title>
+
+    <itemizedlist role="NewFeatures"/>
+  </section>
+
+  <section xml:id="fixedbugs">
+    <title>Fixed Bugs</title>
+
+    <itemizedlist role="FixedBugs"/>
+  </section>
+
+  <section xml:id="knownissues">
+    <title>Known Issues</title>
+
+    <itemizedlist role="KnownIssues"/>
+  </section>
+
+  <section condition="MIR MCI CLF">
+    <title>Upgrading</title>
+
+    <para>Please see the upgrade guide or contact MANDIANT Support at
+    <emphasis>877-9MANDIA</emphasis> (877-962-6342). Email support is available
+    from&#8194;<uri>mirsupport@mandiant.com</uri>..</para>
+  </section>
+
+  <section>
+    <title>Additional Information</title>
+
+    <para>For complete information regarding this software release, please see the
+    accompanying documentation. This document contains information about upgrading, known
+    issues for the release and fixed defects otherwise unavailable at the time of print of
+    the user and administrator documentation. Customers are also encouraged to take
+    particular note of the known issues detailed above.</para>
+
+    <para>This documentation and any accompanying software are released "as is." MANDIANT
+    makes no warranty of any kind, expressed or implied, concerning these materials,
+    including without limitation, any warranties of merchantability or fitness for a
+    particular purpose. In no event will MANDIANT be liable for any damages, including any
+    lost profits, lost savings, or other incidental or consequential damages arising out
+    of the use, or inability of use, of documentation or any accompanying software, even
+    if informed in advance of the possibility of such damages.</para>
+  </section>
+
+  <section condition="MIR MCI CLF" version="5.0" xml:id="s_how_to_get_support">
+    <title>How to Get Support</title>
+
+    <indexterm>
+      <primary>MANDIANT Intelligent Response</primary>
+
+      <secondary>technical support</secondary>
+    </indexterm>
+
+    <indexterm>
+      <primary>Technical Support</primary>
+    </indexterm>
+
+    <para>MANDIANT provides technical support for <phrase
+    condition="MIR">MIR</phrase><phrase condition="MCI">MCIC</phrase><phrase
+    condition="CLF">Clifford</phrase> users. Telephone support is available via our
+    support line at <emphasis>877-9MANDIA</emphasis> (877-962-6342). Email support is
+    available from&#8194;<uri>mirsupport@mandiant.com</uri>.</para>
+
+    <para>Before contacting Technical Support, please have the following information
+    prepared: <itemizedlist spacing="compact">
+        <listitem>
+          <para>Your name.</para>
+        </listitem>
+
+        <listitem>
+          <para>Your company name.</para>
+        </listitem>
+
+        <listitem>
+          <para>Email and telephone contact information.</para>
+        </listitem>
+
+        <listitem>
+          <para>Your MIR Controller serial numbers, located on the left side panel when
+          facing the front of the appliance.</para>
+        </listitem>
+
+        <listitem>
+          <para>The MIR version number.</para>
+        </listitem>
+
+        <listitem>
+          <para>The <phrase condition="MIR">MIR Console and Agent</phrase><phrase
+          condition="MCI">MCIC and Agent</phrase><phrase condition="CLF">Clifford and
+          Agent</phrase> version numbers.</para>
+        </listitem>
+
+        <listitem>
+          <para>A detailed description of the problem, including any screenshots, error
+          messages, or issues documents, and a list of steps and conditions that produced
+          the problem.</para>
+        </listitem>
+      </itemizedlist></para>
+  </section>
+</article>
